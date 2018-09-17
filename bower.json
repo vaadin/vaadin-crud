@@ -49,7 +49,8 @@
     "vaadin-dropdown-menu": "^1.1.0",
     "vaadin-item": "^2.1.0",
     "vaadin-list-box": "^1.1.0",
-    "vaadin-combo-box": "^4.1.0"
+    "vaadin-combo-box": "^4.1.0",
+    "vaadin-notification": "^1.2.0"
   },
   "resolutions": {
     "vaadin-element-mixin": "^2.0.0",
