@@ -275,7 +275,7 @@
             it('should enable save button on ' + type, done => {
               edit(crud.items[0]);
               Polymer.RenderStatus.afterNextRender(crud.$.dialog.$.overlay, () => {
-                crud._form.dispatchEvent(new Event(type, {bubbles: true}))
+                crud._form.dispatchEvent(new Event(type, {bubbles: true}));
                 expect(btnSave().hasAttribute('disabled')).not.to.be.true;
                 done();
               });
