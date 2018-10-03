@@ -83,8 +83,8 @@
         });
 
         !shadyDom && it('should not add sorters and filters if disabled', () => {
-          expect(getHeaderCellContent(crudGrid, 1, 1).firstElementChild).not.to.be.ok;
-          expect(getHeaderCellContent(crudGrid, 1, 1).textContent).to.be.equal('First');
+          expect(getHeaderCellContent(crudGrid, 1, 0).firstElementChild).not.to.be.ok;
+          expect(getHeaderCellContent(crudGrid, 1, 0).textContent).to.be.equal('First');
         });
       });
 
@@ -124,6 +124,24 @@
         it('should generate one column when providing list of primitives', () => {
           crudGrid.items = ['foo', 'bar'];
           expect(crudGrid.querySelectorAll('vaadin-grid-column').length).to.be.equal(1);
+        });
+
+        !shadyDom && describe('include exclude', () => {
+          it('should ignore excluded fields', () => {
+            crudGrid.items = items;
+            window.flushGrid(crudGrid);
+            expect(crudGrid.querySelectorAll('vaadin-grid-column').length).to.be.equal(3);
+          });
+
+          it('should configure include fields in the provided order', () => {
+            crudGrid.include = 'role,password,name.first,name.last';
+            crudGrid.items = items;
+            window.flushGrid(crudGrid);
+            expect(getHeaderCellContent(crudGrid, 0, 0).textContent.trim()).to.be.equal('Role');
+            expect(getHeaderCellContent(crudGrid, 0, 1).textContent.trim()).to.be.equal('Password');
+            expect(getHeaderCellContent(crudGrid, 0, 2).textContent.trim()).to.be.equal('First');
+            expect(getHeaderCellContent(crudGrid, 0, 3).textContent.trim()).to.be.equal('Last');
+          });
         });
 
         ['items', 'dataProvider'].forEach(type => {

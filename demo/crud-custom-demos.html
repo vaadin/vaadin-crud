@@ -8,7 +8,7 @@
 
     <h3>Grid</h3>
     <p>Customize the grid by replacing the default one with your own.</p>
-    <p><i>NOTE: </i>That you need to add a <code>vaadin-crud-edit-column</code> in order to have a mecanism to edit the item</p>
+    <p><i>NOTE: </i>That you need to add a <code>vaadin-crud-edit-column</code> in order to have a mecanism for editing the item</p>
     <vaadin-demo-snippet id="crud-custom-demos-custom-grid">
       <template preserve-content>
         <iron-ajax auto url="users.json" last-response="{{items}}"></iron-ajax>
@@ -34,13 +34,14 @@
 
     <h3>Form</h3>
     <p>Provide an element with the form content to customize the editor</p>
+    <p><i>NOTE: </i>You can add any custom component that provides a `value` property and a validation mechanism</p>
     <vaadin-demo-snippet id="crud-custom-demos-custom-editor">
       <template preserve-content>
         <iron-ajax auto url="users.json" last-response="{{items}}"></iron-ajax>
-        <vaadin-crud items=[[items]] exclude="_id|password">
+        <vaadin-crud items=[[items]] exclude="_id, password">
           <vaadin-form-layout slot="form" style="max-width: 60em">
-            <vaadin-text-field path="name.first"label="First Name" required></vaadin-text-field>
-            <vaadin-text-field path="name.last" label="Last Name" required></vaadin-text-field>
+            <vaadin-text-field path="name.first"label="First name" required></vaadin-text-field>
+            <vaadin-text-field path="name.last" label="Last name" required></vaadin-text-field>
             <br>
             <vaadin-text-field path="details.email"label="Email" required
               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
@@ -62,7 +63,7 @@
     <vaadin-demo-snippet id="crud-custom-demos-custom-editor">
       <template preserve-content>
         <iron-ajax auto url="users.json" last-response="{{items}}"></iron-ajax>
-        <vaadin-crud items=[[items]]  size="{{size}}" exclude="_id|password|picture">
+        <vaadin-crud items=[[items]]  size="{{size}}" exclude="_id, password, picture">
           <div slot="footer">There are <b>[[size]]</b> users in the database</div>
           <a slot="new" href="javascript:">Add a new user</a>
         </vaadin-crud>
