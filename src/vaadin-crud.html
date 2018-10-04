@@ -53,7 +53,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
       </slot>
     </div>
 
-    <vaadin-dialog-layout theme$="[[theme]]" id="dialog" no-close-on-outside-click=[[__isDirty]] no-close-on-esc=[[__isDirty]] opened="{{opened}}" theme="crud">
+    <vaadin-dialog-layout theme$="[[theme]]" id="dialog" no-close-on-outside-click=[[__isDirty]] no-close-on-esc=[[__isDirty]] opened="{{editorOpened}}" theme="crud">
       <h3 slot="header">[[__editorHeader]]</h3>
       <div id="editor">
         <slot name="form">
@@ -251,7 +251,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
             /**
              * Reflects the opened status of the editor.
              */
-            opened: {
+            editorOpened: {
               type: Boolean,
               notify: true,
               observer: '__onOpenedChanged'
@@ -455,7 +455,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           }
 
           this.__isNew = this.__isNew || this.items && this.items.indexOf(item) < 0;
-          this.opened = !!item;
+          this.editorOpened = !!item;
         }
 
         /** A reference to all fields inside the [`_form`](#/elements/vaadin-crud#property-_form) element */
@@ -471,7 +471,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
         }
 
         __closeEditor() {
-          this.opened = false;
+          this.editorOpened = false;
           // Delay changing the item in order not to modify editor while closing
           setTimeout(() => this.item = undefined);
         }
@@ -494,7 +494,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           if (evt) {
             this.editedItem = item || {};
           } else {
-            this.opened = true;
+            this.editorOpened = true;
           }
         }
 

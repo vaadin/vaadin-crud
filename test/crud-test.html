@@ -83,7 +83,7 @@
           });
         });
 
-        afterEach(() => crud.opened = false);
+        afterEach(() => crud.editorOpened = false);
 
         it('should be able to set items and item declaratively', () => {
           expect(crud._grid._columnTree.length).to.be.equal(1);
@@ -100,7 +100,7 @@
         });
 
         it('should open the new item editor if item is provided declarativelly', () => {
-          expect(crud.opened).to.be.true;
+          expect(crud.editorOpened).to.be.true;
           expect(crud.__editorHeader).to.be.equal('New item');
         });
 
@@ -329,7 +329,7 @@
               edit(crud.items[0]);
               expect(crud.editedItem).to.be.equal(crud.items[0]);
               expect(crud.$.dialog.opened).to.be.true;
-              expect(crud.opened).to.be.true;
+              expect(crud.editorOpened).to.be.true;
             });
 
             it('on edit should not set the item nor open dialog if default prevented', () => {
@@ -379,7 +379,7 @@
               edit(crud.items[0]);
               btnCancel().click();
               expect(crud.$.dialog.opened).not.to.be.ok;
-              expect(crud.opened).not.to.be.ok;
+              expect(crud.editorOpened).not.to.be.ok;
             });
 
             it('on cancel should keep opened dialog if default prevented', () => {
@@ -526,7 +526,7 @@
           Polymer.RenderStatus.afterNextRender(crud, done);
         });
 
-        afterEach(() => crud.opened = false);
+        afterEach(() => crud.editorOpened = false);
 
         it('should be able to validate fields', () => {
           edit(crud.items[0]);
