@@ -206,7 +206,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
             /**
              * The item being edited in the dialog.
              */
-            item: {
+            editedItem: {
               type: Object,
               observer: '__onItemChange'
             },
@@ -396,8 +396,8 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           if (this.items) {
             this.__onItemsChange(this.items);
           }
-          if (this.item) {
-            this.__onItemChange(this.item);
+          if (this.editedItem) {
+            this.__onItemChange(this.editedItem);
           }
           grid.addEventListener('edit', this.__editListener);
           grid.addEventListener('size-changed', this.__gridSizeListener);
@@ -416,8 +416,8 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           if (this.items) {
             this.__onItemsChange(this.items);
           }
-          if (this.item) {
-            this.__onItemChange(this.item);
+          if (this.editedItem) {
+            this.__onItemChange(this.editedItem);
           }
           if (this.$.form != form) {
             // move slotted from this to the overlay DOM so as it can target the slot
@@ -492,7 +492,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           this.__isNew = !item;
           const evt = this.dispatchEvent(new CustomEvent(this.__isNew ? 'new' : 'edit', {detail: {item: item}, cancelable: true}));
           if (evt) {
-            this.item = item || {};
+            this.editedItem = item || {};
           } else {
             this.opened = true;
           }
@@ -503,10 +503,10 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
             return;
           }
 
-          const item = this.item || {};
+          const item = this.editedItem || {};
           this._fields.forEach(e => {
             const path = e.path || e.getAttribute('path');
-            path && this.__set(path, e.value, this.item);
+            path && this.__set(path, e.value, this.editedItem);
           });
           const evt = this.dispatchEvent(new CustomEvent('save', {detail: {item: item}, cancelable: true}));
           if (evt) {
@@ -533,7 +533,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
         }
 
         __confirmCancel() {
-          const evt = this.dispatchEvent(new CustomEvent('cancel', {detail: {item: this.item}, cancelable: true}));
+          const evt = this.dispatchEvent(new CustomEvent('cancel', {detail: {item: this.editedItem}, cancelable: true}));
           if (evt) {
             this.__closeEditor();
           }
@@ -545,10 +545,10 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
         }
 
         __confirmDelete() {
-          const evt = this.dispatchEvent(new CustomEvent('delete', {detail: {item: this.item}, cancelable: true}));
+          const evt = this.dispatchEvent(new CustomEvent('delete', {detail: {item: this.editedItem}, cancelable: true}));
           if (evt) {
-            if (this.items && this.items.indexOf(this.item) >= 0) {
-              this.items.splice(this.items.indexOf(this.item), 1);
+            if (this.items && this.items.indexOf(this.editedItem) >= 0) {
+              this.items.splice(this.items.indexOf(this.editedItem), 1);
             }
             this._grid.clearCache();
             this.__closeEditor();
