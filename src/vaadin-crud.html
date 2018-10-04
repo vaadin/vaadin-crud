@@ -363,11 +363,12 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
 
         __onDomChange(nodes) {
           nodes.forEach(node => {
-            if (node instanceof Vaadin.GridElement) {
-              this._grid = node;
-            }
-            if (node.getAttribute && node.getAttribute('slot') === 'form') {
-              this._form = node;
+            if (node.getAttribute) {
+              if (node.getAttribute('slot') == 'grid') {
+                this._grid = node;
+              } else if (node.getAttribute('slot') == 'form') {
+                this._form = node;
+              }
             }
           });
         }
@@ -389,9 +390,6 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           if (old) {
             old.removeEventListener('edit', this.__editListener);
             old.removeEventListener('size-changed', this.__gridSizeListener);
-          }
-          if (grid != this.$.grid) {
-            grid.setAttribute('slot', 'grid');
           }
           if (this.items) {
             this.__onItemsChange(this.items);

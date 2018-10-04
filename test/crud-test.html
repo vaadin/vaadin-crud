@@ -446,7 +446,20 @@
           setTimeout(done);
         });
 
+        it('should not customize the grid without a proper slot', done => {
+          crud.appendChild(grid);
+          crud._observer.flush();
+          crud.items = [1, 2];
+
+          Polymer.RenderStatus.afterNextRender(crud, () => {
+            window.flushGrid(grid);
+            expect(crud._grid).not.to.be.equal(grid);
+            done();
+          });
+        });
+
         it('should be able to provide a custom grid', done => {
+          grid.setAttribute('slot', 'grid');
           crud.appendChild(grid);
           crud._observer.flush();
           crud.items = [1, 2];
