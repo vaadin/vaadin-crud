@@ -92,7 +92,7 @@
 
         it('should have a column with editor buttons', () => {
           expect(crud._grid._columnTree[0].length).to.be.equal(2);
-          expect(crud._grid._columnTree[0][1].localName).to.be.equal('vaadin-crud-grid-edit-column');
+          expect(crud._grid._columnTree[0][1].localName).to.be.equal('vaadin-crud-edit-column');
         });
 
         it('should have a slot for footer content', () => {
