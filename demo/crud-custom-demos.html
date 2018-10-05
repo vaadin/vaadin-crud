@@ -17,7 +17,7 @@
             <vaadin-crud-edit-column></vaadin-crud-edit-column>
 
             <vaadin-grid-column width="60px" flex-grow="0">
-              <template><img src="[[item.details.picture]]" style="width: 40px; border-radius: 50%;"></template>
+              <template><img src="[[item.details.picture]]" style="height: 40px; border-radius: 50%;"></template>
             </vaadin-grid-column>
             <vaadin-grid-column>
               <template class="header">User</template>
@@ -34,7 +34,7 @@
 
     <h3>Form</h3>
     <p>Provide an element with the form content to customize the editor</p>
-    <p><i>NOTE: </i>You can add any custom component that provides a `value` property and a validation mechanism</p>
+    <p><i>NOTE: </i>You can add any component providing a <code>value</code> property and a validation mechanism: <code>validate</code> or <code>checkValidity</code></p>
     <vaadin-demo-snippet id="crud-custom-demos-custom-editor">
       <template preserve-content>
         <iron-ajax auto url="users.json" last-response="{{items}}"></iron-ajax>
@@ -59,7 +59,7 @@
     </vaadin-demo-snippet>
 
     <h3>Footer</h3>
-    <p>You can add some content to the footer, bind to the size data, and customize the 'new' button.</p>
+    <p>You can add content to the footer, bind to the size data, and customize the 'new' button.</p>
     <vaadin-demo-snippet id="crud-custom-demos-custom-editor">
       <template preserve-content>
         <iron-ajax auto url="users.json" last-response="{{items}}"></iron-ajax>

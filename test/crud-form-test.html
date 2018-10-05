@@ -66,7 +66,12 @@
           expect(crudForm._fields.length).to.be.equal(1);
         });
 
-        it('should add included fields', () => {
+        it('should add included fields when item is not provided', () => {
+          crudForm.include = 'a.b, a.c.d, a.c.e, f';
+          expect(crudForm._fields.length).to.be.equal(4);
+        });
+
+        it('should add included fields when item is provided ignoring exclude property', () => {
           crudForm.include = '_b';
           crudForm.item = {a: 1, _b: 2, c: 3};
           expect(crudForm._fields.length).to.be.equal(1);

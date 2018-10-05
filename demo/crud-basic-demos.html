@@ -26,15 +26,16 @@
 
     <h3>Include fields</h3>
     <p>Grid columns and form fields can be defined by providing a list of fields in the <code>include</code> property.</p>
+    <p><i>NOTE: </i>When there is no initial data, use this to configure grid and form, then you can add new items</p>
     <vaadin-demo-snippet id="crud-basic-demos-basics">
       <template preserve-content>
-        <iron-ajax auto url="users.json" last-response="{{items}}"></iron-ajax>
-        <vaadin-crud include="role, name.first, name.last"  items=[[items]]></vaadin-crud>
+        <vaadin-crud items="{{items}}" include="name.first, name.last, details.email, role"></vaadin-crud>
       </template>
     </vaadin-demo-snippet>
 
     <h3>Exclude fields</h3>
     <p>Otherwise you can exclude a set of fields by using the the <code>exclude</code> property.</p>
+    <p><i>NOTE: </i>When the <code>include</code> property is set <code>exclude</code> is ignored</p>
     <vaadin-demo-snippet id="crud-basic-demos-basics">
       <template preserve-content>
         <iron-ajax auto url="users.json" last-response="{{items}}"></iron-ajax>

@@ -201,6 +201,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
              */
             items: {
               type: Array,
+              notify: true,
               observer: '__onItemsChange'
             },
             /**
@@ -512,8 +513,12 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           });
           const evt = this.dispatchEvent(new CustomEvent('save', {detail: {item: item}, cancelable: true}));
           if (evt) {
-            if (this.__isNew && this.items) {
-              this.items.push(item);
+            if (this.__isNew && !this.dataProvider) {
+              if (!this.items) {
+                this.items = [item];
+              } else {
+                this.items.push(item);
+              }
             }
             this._grid.clearCache();
             this.__closeEditor();
