@@ -294,6 +294,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
                 saveItem: 'Save',
                 cancel: 'Cancel',
                 deleteItem: 'Delete...',
+                editLabel: 'Edit',
                 confirm: {
                   delete: {
                     title: 'Confirm delete',
@@ -326,6 +327,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
                   saveItem: 'Save',
                   cancel: 'Cancel',
                   deleteItem: 'Delete...',
+                  editLabel: 'Edit',
                   confirm: {
                     delete: {
                       title: 'Confirm delete',
@@ -353,6 +355,10 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           };
         }
 
+        static get observers() {
+          return ['__onI18Change(i18n, _grid)'];
+        }
+
         constructor() {
           super();
           this._observer = new Polymer.FlattenedNodesObserver(this, info => {
@@ -367,6 +373,14 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           this.__gridSizeListener = this.__onGridSizeChanges.bind(this);
           this._grid = this.$.grid;
           this._form = this.$.form;
+        }
+
+        __onI18Change(i18n, grid) {
+          if (grid) {
+            Polymer.RenderStatus.afterNextRender(grid, () =>
+              Array.from(grid.querySelectorAll('vaadin-crud-edit'))
+                .forEach(e => e.setAttribute('aria-label', i18n.editLabel)));
+          }
         }
 
         __onOpenedChanged(opened, old) {

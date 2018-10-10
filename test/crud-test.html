@@ -104,10 +104,15 @@
           expect(crud.__editorHeader).to.be.equal('New item');
         });
 
-        it('should be able to internationalise via `i18n` property', () => {
+        it('should be able to internationalise via `i18n` property', done => {
           expect(crud.$.new.textContent).to.be.equal('New item');
-          crud.i18n = Object.assign({}, crud.i18n, {newItem: 'Nueva entidad'});
-          expect(crud.$.new.textContent).to.be.equal('Nueva entidad');
+          crud.i18n = Object.assign({}, crud.i18n, {newItem: 'Nueva entidad', editLabel: 'Editar entidad'});
+
+          Polymer.RenderStatus.afterNextRender(crud._grid, () => {
+            expect(crud.$.new.textContent).to.be.equal('Nueva entidad');
+            expect(crud._grid.querySelector('vaadin-crud-edit').getAttribute('aria-label')).to.be.equal('Editar entidad');
+            done();
+          });
         });
 
         it('should propagate theme to internal themable components', () => {
