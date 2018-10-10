@@ -377,9 +377,12 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
 
         __onI18Change(i18n, grid) {
           if (grid) {
-            Polymer.RenderStatus.afterNextRender(grid, () =>
+            Polymer.RenderStatus.afterNextRender(grid, () => {
+              Array.from(grid.querySelectorAll('vaadin-crud-edit-column'))
+                .forEach(e => e.ariaLabel = i18n.editLabel);
               Array.from(grid.querySelectorAll('vaadin-crud-edit'))
-                .forEach(e => e.setAttribute('aria-label', i18n.editLabel)));
+                .forEach(e => e.setAttribute('aria-label', i18n.editLabel));
+            });
           }
         }
 
