@@ -469,7 +469,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           return (params, callback) => {
             const callbackProxy = (chunk, size) => {
               if (chunk && chunk[0]) {
-                this.__model = Object.assign({}, chunk[0]);
+                this.__model = chunk[0];
               }
 
               callback(chunk, size);
@@ -481,7 +481,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
 
         __onItemsChange(items) {
           if (this.items && this.items[0]) {
-            this.__model = Object.assign({}, items[0]);
+            this.__model = items[0];
           }
 
           if (this._grid) {
