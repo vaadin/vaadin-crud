@@ -45,7 +45,7 @@
             // Configure custom search
             search.addEventListener('input', function(e) {
               const regex = RegExp(search.value, 'i');
-              // reasign to the crud a copy of the data with the filtered items
+              // reassign to the crud a copy of the data with the filtered items
               crud.items = people.slice(0).filter(function(item) {
                 return regex.test(item.first) || regex.test(item.last);
               });
@@ -64,7 +64,7 @@
             const renderer = function(root, column, model) {
               const txt = column == cols[0] ? model.item.first : model.item.last;
               root.innerHTML = txt.replace(RegExp('(' + search.value + ')', 'gi'), '<b>$1</b>');
-            }
+            };
             cols[0].renderer = renderer;
             cols[1].renderer = renderer;
           });
