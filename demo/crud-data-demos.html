@@ -25,7 +25,7 @@
           crud.dataProvider = function(params, callback) {
             const arr = sort(filter(people, params.filters), params.sortOrders);
             const chunk = arr.slice(params.page * params.pageSize, params.page * params.pageSize + params.pageSize);
-            callback(chunk, people.length);
+            callback(chunk, arr.length);
           };
           // Configure CRUD Create and Update
           crud.addEventListener('save', function(e) {
