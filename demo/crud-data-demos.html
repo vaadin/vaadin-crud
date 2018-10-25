@@ -15,7 +15,7 @@
     <p>Listen to <code>save</code> and <code>delete</code> events to persist changes in the database</p>
     <vaadin-demo-snippet id="crud-data-demos-dataprovider">
       <template preserve-content>
-        <vaadin-crud ></vaadin-crud>
+        <vaadin-crud></vaadin-crud>
         <script>
 
         /** CRUD CONFIGURATION **/
@@ -36,6 +36,12 @@
             } else {
               item._id = id++;
               people.push(item);
+              crud._grid.querySelectorAll('vaadin-grid-sorter, vaadin-grid-filter').forEach(function(e) {
+                e.direction = e.value = undefined;
+              });
+              setTimeout(function() {
+                crud._grid.scrollToIndex(getIdx(people, item));
+              }, 50);
             }
           });
           // Configure CRUD Delete
