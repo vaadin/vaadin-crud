@@ -6,12 +6,11 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
 
 <script>
   window.Vaadin = window.Vaadin || {};
-  window.Vaadin.Crud = window.Vaadin.Crud || {};
 
   /**
    * @polymerMixin
    */
-  Vaadin.Crud.IncludedMixin = superClass => class IncludedMixin extends superClass {
+  Vaadin.CrudIncludedMixin = superClass => class IncludedMixin extends superClass {
     static get properties() {
       return {
         /**

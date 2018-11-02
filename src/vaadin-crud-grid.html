@@ -23,9 +23,9 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
        * `<vaadin-grid>` [Documentation](https://vaadin.com/components/vaadin-grid/html-api/elements/Vaadin.GridElement)
        *
        * @memberof Vaadin
-       * @mixes Vaadin.Crud.IncludedMixin
+       * @mixes Vaadin.CrudIncludedMixin
        */
-      class CrudGridElement extends Vaadin.Crud.IncludedMixin(class extends Vaadin.GridElement {}) {
+      class CrudGridElement extends Vaadin.CrudIncludedMixin(class extends Vaadin.GridElement {}) {
         static get is() {
           return 'vaadin-crud-grid';
         }

@@ -20,9 +20,9 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
        * `<vaadin-form-layout>` [Documentation](https://vaadin.com/components/vaadin-form-layout/html-api/elements/Vaadin.FormLayoutElement)
        *
        * @memberof Vaadin
-       * @mixes Vaadin.Crud.IncludedMixin
+       * @mixes Vaadin.CrudIncludedMixin
        */
-      class CrudFormElement extends Vaadin.Crud.IncludedMixin(class extends Vaadin.FormLayoutElement {}) {
+      class CrudFormElement extends Vaadin.CrudIncludedMixin(class extends Vaadin.FormLayoutElement {}) {
         static get is() {
           return 'vaadin-crud-form';
         }
