@@ -54,7 +54,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
       } else if (!this._fields && Array.isArray(include)) {
         const item = {};
         this.include.forEach(path => this.__set(path, null, item));
-        this.configure(item);
+        this._configure(item);
       }
     }
   };

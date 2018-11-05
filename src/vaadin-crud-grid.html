@@ -53,14 +53,14 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
 
         __onItemsChange(items) {
           if ((!this.dataProvider || this.dataProvider == this._arrayDataProvider) && !this.include && items && items[0]) {
-            this.configure(items[0]);
+            this._configure(items[0]);
           }
         }
 
         __dataProviderWrapper(params, callback) {
           this.__dataProvider(params, (items, size) => {
             if (this.innerHTML == '' && !this.include && items[0]) {
-              this.configure(items[0]);
+              this._configure(items[0]);
             }
             callback(items, size);
           });
@@ -86,7 +86,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
          *
          * Method will be executed when items or dataProvider is assigned.
          */
-        configure(item) {
+        _configure(item) {
           this.innerHTML = '';
           this.__createColumns(this, item);
           this.appendChild(document.createElement('vaadin-crud-edit-column'));
