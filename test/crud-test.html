@@ -141,6 +141,7 @@
 
           crud.$.new.click();
           crud._form._fields[0].value = 'baz';
+          change(); // Only needed in IE11.
           btnSave().click();
         });
       });
@@ -177,6 +178,7 @@
           it('should save an edited item', () => {
             edit(crud.items[0]);
             crud._form._fields[0].value = 'baz';
+            change(); // Only needed in IE11.
             btnSave().click();
             expect(crud.items[0].foo).to.be.equal('baz');
           });
@@ -184,6 +186,7 @@
           it('should save a new item', () => {
             crud.$.new.click();
             crud._form._fields[0].value = 'baz';
+            change(); // Only needed in IE11.
             btnSave().click();
             expect(crud.items[1].foo).to.be.equal('baz');
           });
@@ -393,11 +396,13 @@
                 done();
               });
               edit(crud.items[0]);
+              change(); // Only needed in IE11.
               btnSave().click();
             });
 
             it('on save should close dialog if not default prevented', () => {
               edit(crud.items[0]);
+              change(); // Only needed in IE11.
               btnSave().click();
               expect(crud.$.dialog.opened).not.to.be.ok;
             });
