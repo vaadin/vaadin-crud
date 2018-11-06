@@ -11,6 +11,7 @@
         display: flex;
         flex-direction: column;
         padding: 0;
+        max-height: 100vh;
       }
 
       :host([theme~="layout"]) [part="content"] {
@@ -29,7 +30,6 @@
         }
 
         :host([theme~="layout"]) [part="overlay"] {
-          flex: 1;
           width: 100%;
           border-radius: 0 !important;
         }
