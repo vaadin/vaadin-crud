@@ -32,9 +32,58 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
             /**
              * The item being edited.
              */
-            item: Object
-          };
-        }
+            item: Object,
+            config: Array,
+            /**
+             *
+             */
+            __default: {
+              type: Array,
+              value: [
+                  {
+                    valueMatch: '^\\d+\\.\\d+$',
+                    properties: {
+                      'focusElement.type': 'number',
+                      'focusElement.step': 0.01,
+                      'preventInvalidInput': true
+                    }
+                  },
+                  {
+                    valueMatch: '^\\d+$',
+                    properties: {
+                      'focusElement.type': 'number',
+                      'focusElement.step': 1,
+                      'preventInvalidInput': true
+                    }
+                  },
+                  {
+                    valueMatch: '^https?://',
+                    properties: {
+                      'focusElement.type': 'url'
+                    }
+                  },
+                  {
+                    valueMatch: '^\\w+@\\w+\\.\\w+$',
+                    properties: {
+                      'focusElement.type': 'email'
+                    }
+                  },
+                  {
+                    valueMatch: '^(\\d{1,2}\/\\d{1,2}\/\\d{4}|\\d{4}\-\\d{1,2}\-\\d{1,2})$',
+                    element: 'vaadin-date-picker'
+                  },
+                  {
+                    name: 'password',
+                    element: 'vaadin-password-field'
+                  },
+                  {
+                    valueMatch: '^(true|false)$',
+                    element: 'vaadin-checkbox'
+                  }
+                ]
+              }
+            };
+          }
 
         static get observers() {
           return ['__onItemChange(item)'];
@@ -58,11 +107,40 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           }
         }
 
-        __createField(parent, path, type) {
-          const field = document.createElement('vaadin-text-field');
-          field.label = this.__capitalize(path);
-          field.path = path;
-          field.required = true;
+        __getField(path, prop, value) {
+          let cfg = (this.config || []).concat(this.__default).reduce((ret, cfg) => {
+            if (!ret) {
+              const rexp = RegExp(cfg.nameMatch || `^${cfg.name || ''}$`);
+              if (prop == 'price')  debugger;
+              if (cfg.name === prop ||
+                  cfg.nameMatch && RegExp(cfg.nameMatch, 'i').test(prop) ||
+                  cfg.valueMatch && RegExp(cfg.valueMatch, 'i').test(value)) {
+                ret = cfg;
+              }
+            }
+            return ret;
+          }, undefined);
+
+          const elem = document.createElement(cfg && cfg.element || 'vaadin-text-field');
+          if (cfg) {
+            Polymer.RenderStatus.afterNextRender(elem, () => {
+              Object.keys(cfg.properties || {}).forEach(p => {
+                this.set(p, cfg.properties[p], elem);
+              });
+            });
+          }
+
+          const label = cfg && cfg.label || this.__capitalize(path);
+          elem.textContent = label;
+          elem.label = label;
+          elem.path = path;
+          elem.required = cfg && cfg.required !== undefined ? cfg.required : true;
+          return elem;
+        }
+
+        __createField(parent, path, prop, value) {
+          let field;
+          field = this.__getField(path, prop, value);
           parent.appendChild(field);
           this._fields.push(field);
           return field;
@@ -77,7 +155,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
             if (object[prop] && typeof object[prop] === 'object') {
               this.__createFields(parent, object[prop], newPath);
             } else {
-              this.__createField(parent, newPath);
+              this.__createField(parent, newPath, prop, object[prop]);
             }
           });
           if (!this._fields.length) {

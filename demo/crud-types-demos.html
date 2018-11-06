@@ -1,0 +1,61 @@
+<dom-module id="crud-types-demos">
+  <template>
+    <style include="vaadin-component-demo-shared-styles">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <h3>Types</h3>
+    <p>Crud inspects data value and sets the most appropriate field for each</p>
+    <vaadin-demo-snippet id="crud-types-demos-types">
+      <template preserve-content>
+        <vaadin-crud></vaadin-crud>
+        <script>
+          window.addDemoReadyListener('#crud-types-demos-types', function(document) {
+            const crud = document.querySelector('vaadin-crud');
+            crud.items = [
+              {first: 'Donald', last: 'Duck', email:'duck@cartoon.net', password: 'secret',
+               active: true, birthday: '1941-02-05', weight: 3, height: 0.50},
+              {first: 'Porky', last: 'Pig', email: 'pig@cartoon.net', password: 'dontseeit',
+               active: false, birthday: '1935-01-01', weight: 111, height: 0.82}
+            ];
+          });
+        </script>
+      </template>
+    </vaadin-demo-snippet>
+
+    <h3>Custom Types</h3>
+    <p>You can configure fields to have custom controls</p>
+    <vaadin-demo-snippet id="crud-types-demos-custom-types">
+      <template preserve-content>
+        <vaadin-crud>
+        </vaadin-crud>
+        <script>
+          window.addDemoReadyListener('#crud-types-demos-custom-types', function(document) {
+            const crud = document.querySelector('vaadin-crud');
+            crud._form.config = [{
+              name: 'role',
+              element: 'vaadin-combo-box',
+              properties: {
+                items: ['admin', 'user', 'operator']
+              }
+            }];
+            crud.items = [
+              {first: 'Donald', last: 'Duck', role: 'user'}
+            ];
+          });
+        </script>
+      </template>
+    </vaadin-demo-snippet>
+  </template>
+  <script>
+    class CrudTypesDemos extends DemoReadyEventEmitter(CrudDemo(Polymer.Element)) {
+      static get is() {
+        return 'crud-types-demos';
+      }
+    }
+    customElements.define(CrudTypesDemos.is, CrudTypesDemos);
+  </script>
+</dom-module>
+types

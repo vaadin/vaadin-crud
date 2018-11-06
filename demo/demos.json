@@ -66,5 +66,16 @@
          "image": ""
         }
       }
+      ,
+      {
+        "name": "Types",
+        "url": "crud-types-demos",
+        "src": "crud-types-demos.html",
+        "meta": {
+          "title": "vaadin-crud Types examples",
+          "description": "",
+          "image": ""
+         }
+       }
   ]
 }
