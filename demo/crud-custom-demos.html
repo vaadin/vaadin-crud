@@ -85,6 +85,61 @@
       </template>
     </vaadin-demo-snippet>
 
+    <h3>Master Details UI</h3>
+    <p>Provide an element with the editor content to customize the editor</p>
+    <vaadin-demo-snippet id="crud-master-details-demo">
+      <template preserve-content>
+        <vaadin-crud include="company.name, contact.title, contact.name, contact.phone">
+          <vaadin-grid slot="grid">
+            <vaadin-crud-edit-column></vaadin-crud-edit-column>
+
+            <vaadin-grid-column width="160px" flex-grow="0">
+              <template>[[item.company.name]]</template>
+            </vaadin-grid-column>
+            <vaadin-grid-column>
+              <template class="header">Contact person</template>
+              <template>[[item.contact.title]] [[item.contact.name]]</template>
+            </vaadin-grid-column>
+            <vaadin-grid-column>
+              <template class="header">Phone</template>
+              <template>[[item.contact.phone]]</template>
+            </vaadin-grid-column>
+
+          </vaadin-grid>
+          <vaadin-form-layout id="crudForm" slot="form" style="max-width: 60em" responsive-steps='[{columns: 4}]'>
+            <vaadin-text-field path="company.name"label="Company Name" colspan="4" required></vaadin-text-field>
+            <vaadin-text-field path="contact.title" label="Contact Title" colspan="1" required></vaadin-text-field>
+            <vaadin-text-field path="contact.name" label="Contact Name" colspan="3" required></vaadin-text-field>
+            <vaadin-text-field path="location.address" label="Address" colspan="2" required></vaadin-text-field>
+            <vaadin-text-field path="location.city" label="City" required></vaadin-text-field>
+            <vaadin-text-field path="location.zip" label="Postal/Zip Code" required></vaadin-text-field>
+            <br>
+            <vaadin-text-field path="location.region" label="Region" colspan="2" required></vaadin-text-field>
+            <vaadin-combo-box id="crudCountries" path="location.country" colspan="2" label="Country" item-value-path="name" item-label-path="name"></vaadin-combo-box>
+            <br>
+            <vaadin-text-field path="contact.phone" label="Phone" colspan="2" required></vaadin-text-field>
+            <vaadin-text-field path="contact.fax" label="Fax" colspan="2" required></vaadin-text-field>
+          </vaadin-form-layout>
+        </vaadin-crud>
+        <script>
+          window.addDemoReadyListener('#crud-master-details-demo', function(document) {
+            const crud = document.querySelector('vaadin-crud');
+            crud.items = window.contacts;
+            crud.addEventListener('editor-opened-changed', e => {
+              const form = window.document.querySelector('#crudForm');
+              if (form) {
+                form.responsiveSteps = [{columns: 4}];
+              }
+              const countriesCombo = window.document.querySelector('#crudCountries');
+              if (countriesCombo) {
+                countriesCombo.items = window.countries;
+              }
+            });
+          });
+        </script>
+      </template>
+    </vaadin-demo-snippet>
+
   </template>
   <script>
     class CrudCustomDemos extends DemoReadyEventEmitter(CrudDemo(Polymer.Element)) {
