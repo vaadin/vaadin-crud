@@ -413,23 +413,29 @@
             it('on save should keep item unmodified if default prevented', () => {
               listenOnce(crud, 'save', e => e.preventDefault());
 
-              const originalItem = Object.assign({}, crud.items[0]);
+              crud.items = [{foo: 'bar', stuff: { first: 'first', second: 'second'}}];
+              const originalFirstName = crud.items[0].stuff.first;
+
               edit(crud.items[0]);
-              crud._fields[0].value = 'Modified';
+              crud._fields[1].value = 'Modified';
               change();
               btnSave().click();
 
-              expect(crud.items[0]).to.be.deep.equal(originalItem);
+              const newFirstName = crud.items[0].stuff.first;
+              expect(newFirstName).to.be.equal(originalFirstName);
             });
 
             it('on save should modify item if not default prevented', () => {
-              const originalItem = Object.assign({}, crud.items[0]);
+              crud.items = [{foo: 'bar', stuff: { first: 'first', second: 'second'}}];
+              const originalFirstName = crud.items[0].stuff.first;
+
               edit(crud.items[0]);
-              crud._fields[0].value = 'Modified';
+              crud._fields[1].value = 'Modified';
               change();
               btnSave().click();
 
-              expect(crud.items[0]).to.not.be.deep.equal(originalItem);
+              const newFirstName = crud.items[0].stuff.first;
+              expect(newFirstName).to.not.be.equal(originalFirstName);
             });
           });
 
