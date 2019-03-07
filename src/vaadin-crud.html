@@ -427,10 +427,11 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
         }
 
         __onFormChange(form, old) {
+          const changeEvents = ['change', 'checked-changed', 'input'];
+
           if (old && old.parentElement) {
             old.parentElement && old.parentElement.removeChild(old);
-            old.removeEventListener('change', this.__changeListener);
-            old.removeEventListener('input', this.__changeListener);
+            changeEvents.forEach(event => old.removeEventListener(event, this.__changeListener));
           }
           if (!form) {
             return;
@@ -445,8 +446,8 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
             // move slotted from this to the overlay DOM so as it can target the slot
             this.$.dialog.$.dialog.$.overlay.appendChild(form);
           }
-          form.addEventListener('change', this.__changeListener);
-          form.addEventListener('input', this.__changeListener);
+
+          changeEvents.forEach(event => form.addEventListener(event, this.__changeListener));
         }
 
         __onDataProviderChange(dataProvider) {
