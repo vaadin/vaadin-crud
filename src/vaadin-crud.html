@@ -52,12 +52,11 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
 
       #container {
         display: flex;
-        flex-direction: column;
         height: 100%;
       }
 
-      :host([editor-position="aside"]) #container {
-        flex-direction: row;
+      :host([editor-position="bottom"]) #container {
+        flex-direction: column;
       }
     </style>
 
@@ -197,6 +196,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
        * Custom Property | Description | Default
        * ----------------|----------------
        * --vaadin-crud-editor-max-height | max height of editor when opened on the bottom | 40%
+       * --vaadin-crud-editor-max-width | max width of editor when opened on the side | 40%
        *
        * See [ThemableMixin – how to apply styles for shadow parts](https://github.com/vaadin/vaadin-themable-mixin/wiki)
        *

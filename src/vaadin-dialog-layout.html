@@ -18,13 +18,16 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         z-index: 1;
       }
 
+      :host(:not([editor-position=''])[opened]:not([mobile])) {
+        flex: 1 0 100%;
+      }
+
       :host([editor-position='bottom'][opened]:not([mobile])) {
-        flex: 1 1 100%;
         max-height: var(--vaadin-crud-editor-max-height);
       }
 
       :host([editor-position='aside'][opened]:not([mobile])) {
-        flex: 1 1 100%;
+        min-width: 300px;
         max-width: var(--vaadin-crud-editor-max-width);
       }
 
