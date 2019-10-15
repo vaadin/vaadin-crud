@@ -63,7 +63,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
     <div id="container">
       <div id="main">
         <slot name="grid">
-          <vaadin-crud-grid theme$="[[theme]]" id="grid" include="[[include]]" exclude="[[exclude]]" no-sort="[[noSort]]" no-filter="[[noFilter]]" no-head="[[noHead]]"></vaadin-crud-grid>
+          <vaadin-crud-grid theme$="[[theme]]" id="grid" include="[[include]]" exclude="[[exclude]]" no-sort="[[noSort]]" no-filter="[[noFilter]]" no-head="[[noHead]]" hide-edit-column="[[clickRowToEdit]]"></vaadin-crud-grid>
         </slot>
 
         <div id="toolbar" part="toolbar" on-click="__new">
@@ -254,6 +254,11 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
               value: '',
               observer: '__onEditorPositionChange'
             },
+            clickRowToEdit: {
+              type: Boolean,
+              value: false,
+              observer: '__onClickRowToEditChange'
+            },
             /**
              * Function that provides items lazily. Receives arguments `params`, `callback`
              *
@@ -414,6 +419,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           this.__editListener = e => this.__onCrudGridEdit(e);
           this.__changeListener = e => this.__onFormChanges(e);
           this.__gridSizeListener = this.__onGridSizeChanges.bind(this);
+          this.__clickRowToEditListener = this.__clickRowToEditListener.bind(this);
           this._grid = this.$.grid;
           this._form = this.$.form;
         }
@@ -467,6 +473,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
             if (node.getAttribute) {
               if (node.getAttribute('slot') == 'grid') {
                 this._grid = node;
+                this.__onClickRowToEditChange(this.clickRowToEdit);
               } else if (node.getAttribute('slot') == 'form') {
                 this._form = node;
               }
@@ -476,7 +483,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
 
         __onCrudGridEdit(e) {
           e.stopPropagation();
-          this.__edit(e.detail.item);
+          this.__confirmBeforeChangingEditedItem(e.detail.item);
         }
 
         __onFormChanges(e) {
@@ -529,6 +536,54 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
         __onDataProviderChange(dataProvider) {
           if (this._grid) {
             this._grid.dataProvider = this.__createDataProviderProxy(dataProvider);
+          }
+        }
+
+        __onClickRowToEditChange(rowToOpenChange) {
+          Polymer.RenderStatus.beforeNextRender(this, () => {
+            if (!this._grid) {
+              return;
+            }
+
+            if (rowToOpenChange) {
+              this._grid.addEventListener('active-item-changed', this.__clickRowToEditListener);
+            } else {
+              this._grid.removeEventListener('active-item-changed', this.__clickRowToEditListener);
+            }
+          });
+        }
+
+        __clickRowToEditListener(event) {
+          const item = event.detail.value;
+
+          if (this.editedItem && this.__isDirty) {
+            this.__confirmBeforeChangingEditedItem(item);
+            return;
+          }
+
+          if (item) {
+            this.__edit(item);
+          } else {
+            this.__cancel();
+          }
+        }
+
+        __confirmBeforeChangingEditedItem(item) {
+          if (
+            this.editedItem && // Editor opened
+            this.__isDirty && // Form change has been made
+            this.editedItem !== item // Item is different
+          ) {
+            this.$.confirmCancel.opened = true;
+
+            const listenOnce = (event) => {
+              event.preventDefault(); // prevent editor to get closed
+              this.__edit(item);
+              this.removeEventListener('cancel', listenOnce);
+            };
+            this.addEventListener('cancel', listenOnce);
+          } else {
+            this.__edit(item);
           }
         }
 
@@ -594,8 +649,11 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
 
         __closeEditor() {
           this.editorOpened = false;
+          this.__isDirty = false;
           // Delay changing the item in order not to modify editor while closing
-          setTimeout(() => this.editedItem = undefined);
+          setTimeout(() => {
+            this.editedItem = this._grid.activeItem = undefined;
+          });
         }
 
         __new(event) {
@@ -606,6 +664,9 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
         }
 
         __edit(item) {
+          if (this.editedItem === item) {
+            return;
+          }
           this.__openEditor('edit', item);
         }
 
