@@ -49,12 +49,24 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
         }
 
         static get observers() {
-          return ['__onItemsChange(items)'];
+          return [
+            '__onItemsChange(items)',
+            '__onHideEditColumnChange(hideEditColumn)'
+          ];
         }
 
         __onItemsChange(items) {
           if ((!this.dataProvider || this.dataProvider == this._arrayDataProvider) && !this.include && items && items[0]) {
             this._configure(items[0]);
+          }
+        }
+
+        __onHideEditColumnChange(hideEditColumn) {
+          if (this.hideEditColumn) {
+            const el = this.querySelector('vaadin-crud-edit-column');
+            el && el.remove();
+          } else {
+            this.appendChild(document.createElement('vaadin-crud-edit-column'));
           }
         }
 
