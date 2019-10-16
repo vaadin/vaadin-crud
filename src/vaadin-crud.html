@@ -260,8 +260,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
              */
             clickRowToEdit: {
               type: Boolean,
-              value: false,
-              observer: '__onClickRowToEditChange'
+              value: false
             },
             /**
              * Function that provides items lazily. Receives arguments `params`, `callback`
@@ -408,7 +407,10 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
         }
 
         static get observers() {
-          return ['__onI18Change(i18n, _grid)'];
+          return [
+            '__onI18Change(i18n, _grid)',
+            '__onClickRowToEditChange(clickRowToEdit, _grid)'
+          ];
         }
 
         constructor() {
@@ -476,8 +478,10 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           nodes.forEach(node => {
             if (node.getAttribute) {
               if (node.getAttribute('slot') == 'grid') {
+                // Force to remove listener on previous grid first
+                this.__onClickRowToEditChange(false, this._grid);
                 this._grid = node;
-                this.__onClickRowToEditChange(this.clickRowToEdit);
+                this.__onClickRowToEditChange(this.clickRowToEdit, this._grid);
               } else if (node.getAttribute('slot') == 'form') {
                 this._form = node;
               }
@@ -543,24 +547,21 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           }
         }
 
-        __onClickRowToEditChange(rowToOpenChange) {
-          Polymer.RenderStatus.beforeNextRender(this, () => {
-            if (!this._grid) {
-              return;
-            }
+        __onClickRowToEditChange(rowToEditChange, _grid) {
+          if (!_grid) {
+            return;
+          }
 
-            if (rowToOpenChange) {
-              this._grid.addEventListener('active-item-changed', this.__clickRowToEditListener);
-            } else {
-              this._grid.removeEventListener('active-item-changed', this.__clickRowToEditListener);
-            }
-          });
+          if (rowToEditChange) {
+            _grid.addEventListener('active-item-changed', this.__clickRowToEditListener);
+          } else {
+            _grid.removeEventListener('active-item-changed', this.__clickRowToEditListener);
+          }
         }
 
         __clickRowToEditListener(event) {
           const item = event.detail.value;
-
-          if (this.editedItem && this.__isDirty) {
+          if (this.editorOpened && this.__isDirty) {
             this.__confirmBeforeChangingEditedItem(item);
             return;
           }
@@ -574,7 +575,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
 
         __confirmBeforeChangingEditedItem(item) {
           if (
-            this.editedItem && // Editor opened
+            this.editorOpened && // Editor opened
             this.__isDirty && // Form change has been made
             this.editedItem !== item // Item is different
           ) {
