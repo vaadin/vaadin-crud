@@ -44,7 +44,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
              * Do not add headers to columns.
              */
             noHead: Boolean,
-            hideEditColumn: Boolean
+            __hideEditColumn: Boolean
           };
         }
 
@@ -62,7 +62,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
         }
 
         __onHideEditColumnChange(hideEditColumn) {
-          if (!this.innerHTML == '') {
+          if (this.firstChild) {
             this.__toggleEditColumn();
           }
         }
