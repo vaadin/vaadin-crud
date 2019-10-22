@@ -217,6 +217,17 @@
             btnConfDialog(crud.$.confirmDelete, 'confirm').click();
             expect(crud.items.length).to.be.equal(1);
           });
+
+          it('should highlight the edited item', () => {
+            edit(crud.items[0]);
+            expect(crud._grid.selectedItems).to.eql([crud.items[0]]);
+          });
+
+          it('should remove highlighting of the edited item after closing the editor', () => {
+            edit(crud.items[0]);
+            crud.editorOpened = false;
+            expect(crud._grid.selectedItems).to.eql([]);
+          });
         });
 
         describe('confirmation', () => {

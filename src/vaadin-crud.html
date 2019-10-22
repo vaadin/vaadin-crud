@@ -659,6 +659,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
         __closeEditor() {
           this.editorOpened = false;
           this.__isDirty = false;
+          this._grid.selectedItems = [];
           // Delay changing the item in order not to modify editor while closing
           setTimeout(() => this.editedItem = this._grid.activeItem = undefined);
         }
@@ -674,6 +675,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           if (this.editedItem === item) {
             return;
           }
+          this._grid.selectedItems = [item];
           this.__openEditor('edit', item);
         }
 
