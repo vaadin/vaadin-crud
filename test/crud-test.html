@@ -883,6 +883,45 @@
           btnConfDialog(crud.$.confirmCancel, 'confirm').click();
           expect(crud.editorOpened).to.be.false;
         });
+
+        it('should open same row again after item closed after click on "New"', (done) => {
+          crud.__mobile = false;
+
+          fakeClickOnRow(0);
+          expect(crud.editorOpened).to.be.true;
+          crud.$.new.click();
+          setTimeout(() => {
+            expect(crud.editorOpened).to.be.true;
+            setTimeout(() => {
+              expect(crud._grid.activeItem).to.be.undefined;
+              fakeClickOnRow(0);
+              expect(crud.editorOpened).to.be.true;
+              expect(crud.editedItem).to.be.equal(crud.items[0]);
+              done();
+            });
+          });
+        });
+
+        it('should open same row again after item was discarded after click on "New"', (done) => {
+          crud.__mobile = false;
+
+          fakeClickOnRow(0);
+          expect(crud.editorOpened).to.be.true;
+          crud.__isDirty = true;
+          crud.$.new.click();
+          setTimeout(() => {
+            expect(crud.$.confirmCancel.opened).to.be.true;
+            btnConfDialog(crud.$.confirmCancel, 'confirm').click();
+            expect(crud.editorOpened).to.be.true;
+            setTimeout(() => {
+              expect(crud._grid.activeItem).to.be.undefined;
+              fakeClickOnRow(0);
+              expect(crud.editorOpened).to.be.true;
+              expect(crud.editedItem).to.be.equal(crud.items[0]);
+              done();
+            });
+          });
+        });
       });
     });
   </script>
