@@ -38,7 +38,9 @@ gemini.suite('vaadin-crud', function(rootSuite) {
         .setCaptureElements('vaadin-crud')
         .capture('vaadin-crud')
         .capture('rtl', actions => {
-          actions.executeJS(window => window.document.documentElement.setAttribute('dir', 'rtl'));
+          actions
+            .executeJS(window => window.document.documentElement.setAttribute('dir', 'rtl'))
+            .waitForJSCondition(window => window.document.documentElement.getAttribute('dir') == 'rtl');
         });
     });
   });
