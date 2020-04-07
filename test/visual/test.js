@@ -20,23 +20,26 @@ gemini.suite('vaadin-crud', function(rootSuite) {
   ['lumo', 'material'].forEach(theme => {
     gemini.suite(`default-tests-${theme}`, function(suite) {
       suite
-        .setUrl(`/default.html?theme=${theme}`)
+        .setUrl(`default.html?theme=${theme}`)
         .setCaptureElements('body')
         .capture('vaadin-crud');
     });
 
     gemini.suite(`editor-bottom-tests-${theme}`, function(suite) {
       suite
-        .setUrl(`/editor-bottom.html?theme=${theme}`)
+        .setUrl(`editor-bottom.html?theme=${theme}`)
         .setCaptureElements('vaadin-crud')
         .capture('vaadin-crud');
     });
 
     gemini.suite(`editor-aside-tests-${theme}`, function(suite) {
       suite
-        .setUrl(`/editor-aside.html?theme=${theme}`)
+        .setUrl(`editor-aside.html?theme=${theme}`)
         .setCaptureElements('vaadin-crud')
-        .capture('vaadin-crud');
+        .capture('vaadin-crud')
+        .capture('rtl', actions => {
+          actions.executeJS(window => window.document.documentElement.setAttribute('dir', 'rtl'));
+        });
     });
   });
 
