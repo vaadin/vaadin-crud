@@ -32,16 +32,13 @@ gemini.suite('vaadin-crud', function(rootSuite) {
         .capture('vaadin-crud');
     });
 
-    gemini.suite(`editor-aside-tests-${theme}`, function(suite) {
-      suite
-        .setUrl(`editor-aside.html?theme=${theme}`)
-        .setCaptureElements('vaadin-crud')
-        .capture('vaadin-crud')
-        .capture('rtl', actions => {
-          actions
-            .executeJS(window => window.document.documentElement.setAttribute('dir', 'rtl'))
-            .waitForJSCondition(window => window.document.documentElement.getAttribute('dir') == 'rtl');
-        });
+    ['ltr', 'rtl'].forEach(direction => {
+      gemini.suite(`editor-aside-tests-${theme}-${direction}`, function(suite) {
+        suite
+          .setUrl(`editor-aside.html?theme=${theme}&dir=${direction}`)
+          .setCaptureElements('vaadin-crud')
+          .capture('vaadin-crud');
+      });
     });
   });
 
