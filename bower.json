@@ -36,7 +36,7 @@
     "vaadin-form-layout": "^2.2.0-alpha1",
     "vaadin-text-field": "^2.6.0-alpha4",
     "vaadin-button": "^2.3.0-alpha1",
-    "vaadin-confirm-dialog": "^1.2.0-alpha2",
+    "vaadin-confirm-dialog": "^1.2.0-alpha3",
     "vaadin-license-checker": "vaadin/license-checker#^2.1.0"
   },
   "devDependencies": {
