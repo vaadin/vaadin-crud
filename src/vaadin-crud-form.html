@@ -56,12 +56,14 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           this.notifyResize();
         }
 
+        /** @private */
         __onItemChange(item) {
           if (!this._fields) {
             this._configure(item);
           }
         }
 
+        /** @private */
         __createField(parent, path, type) {
           const field = document.createElement('vaadin-text-field');
           field.label = this.__capitalize(path);
@@ -72,6 +74,7 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           return field;
         }
 
+        /** @private */
         __createFields(parent, object, path) {
           Object.keys(object).forEach(prop => {
             if (!this.include && this.exclude && this.exclude.test(prop)) {
@@ -89,10 +92,12 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           }
         }
 
+        /** @private */
         __capitalize(path) {
           return path.toLowerCase().replace(/([^\w]+)/g, ' ').trim().replace(/^./, c => c.toUpperCase());
         }
 
+        /** @private */
         __set(path, val, obj) {
           if (obj && path) {
             path.split('.').slice(0, -1).reduce((o, p) => (o[p] = o[p] || {}), obj);

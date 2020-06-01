@@ -2,7 +2,7 @@ import { GridFilter, GridSorter } from '@vaadin/vaadin-grid/@types/interfaces'
 
 export type CrudDataProviderCallback = (
   items: Array<CrudItem>,
-  size: number
+  size?: number
 ) => void;
 
 export type CrudDataProviderParams = {
