@@ -651,9 +651,9 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
               } else {
                 this.__closeEditor();
               }
-              this.removeEventListener('cancel', listenOnce);
+              this.$.confirmCancel.removeEventListener('cancel', listenOnce);
             };
-            this.addEventListener('cancel', listenOnce);
+            this.$.confirmCancel.addEventListener('cancel', listenOnce);
           } else {
             this.__edit(item);
             this.__clearItemAndKeepEditorOpened(item, keepOpened);
