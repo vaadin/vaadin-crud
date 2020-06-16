@@ -270,7 +270,7 @@
               crud.$.new.click();
               expect(crud.$.confirmCancel.opened).not.to.be.ok;
             });
-            
+
             it('should ask for confirmation on cancel when modified', () => {
               edit(crud.items[0]);
               change();
