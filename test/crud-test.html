@@ -267,7 +267,7 @@
 
             it('should not ask for confirmation on cancel when not modified', () => {
               edit(crud.items[0]);
-              fakeClickOnRow(0);
+              crud.$.new.click();
               expect(crud.$.confirmCancel.opened).not.to.be.ok;
             });
             
@@ -281,7 +281,7 @@
             it('should ask for confirmation on cancel when modified', () => {
               edit(crud.items[0]);
               change();
-              fakeClickOnRow(0);
+              crud.$.new.click();
               expect(crud.$.confirmCancel.opened).to.be.true;
             });
 
@@ -341,7 +341,7 @@
               crud._grid.activeItem = crud.items[0];
               edit(crud.items[0]);
               change();
-              fakeClickOnRow(0);
+              crud.$.new.click();
               setTimeout(() => {
                 expect(cancelSpyListener.notCalled).to.be.ok;
                 done();
