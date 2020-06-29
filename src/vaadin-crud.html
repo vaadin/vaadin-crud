@@ -472,8 +472,8 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
           this.__boundEditOnClickListener = this.__editOnClickListener.bind(this);
           this._grid = this.$.grid;
           this._form = this.$.form;
-          this.$.dialog.$.dialog.$.overlay.addEventListener('vaadin-overlay-outside-click', this.__cancelByEscOrClick.bind(this));
-          this.$.dialog.$.dialog.$.overlay.addEventListener('vaadin-overlay-escape-press', this.__cancelByEscOrClick.bind(this));
+          this.$.dialog.$.dialog.$.overlay.addEventListener('vaadin-overlay-outside-click', this.__cancel.bind(this));
+          this.$.dialog.$.dialog.$.overlay.addEventListener('vaadin-overlay-escape-press', this.__cancel.bind(this));
         }
 
         /** @private */
@@ -813,15 +813,6 @@ This program is available under Commercial Vaadin Add-On License 3.0, available 
             this._grid.clearCache();
             this.__closeEditor();
           }
-        }
-
-        /** @private */
-        __cancelByEscOrClick(e) {
-          if (e.type == 'vaadin-overlay-escape-press' && !this.__isDirty ||
-              e.type == 'vaadin-overlay-outside-click' && !this.__isDirty) {
-            e.preventDefault();
-          }
-          this.__cancel();
         }
 
         /** @private */
