@@ -1,9 +1,10 @@
-<link rel="import" href="../../../vaadin-lumo-styles/typography.html">
-<link rel="import" href="../../../vaadin-lumo-styles/color.html">
-<link rel="import" href="../../../vaadin-lumo-styles/font-icons.html">
-<link rel="import" href="../vaadin-dialog-layout-overlay-styles.html">
+import '@vaadin/vaadin-lumo-styles/typography.js';
+import '@vaadin/vaadin-lumo-styles/color.js';
+import '@vaadin/vaadin-lumo-styles/font-icons.js';
+import '../vaadin-dialog-layout-overlay-styles.js';
+import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 
-<dom-module id="lumo-crud-grid-edit" theme-for="vaadin-crud-edit">
+const $_documentContainer = html`<dom-module id="lumo-crud-grid-edit" theme-for="vaadin-crud-edit">
   <template>
     <style>
       :host {
@@ -52,9 +53,7 @@
       }
     </style>
   </template>
-</dom-module>
-
-<dom-module id="lumo-crud" theme-for="vaadin-crud">
+</dom-module><dom-module id="lumo-crud" theme-for="vaadin-crud">
   <template>
     <style>
       :host {
@@ -85,9 +84,7 @@
       }
     </style>
   </template>
-</dom-module>
-
-<dom-module id="dialog-layout-theme" theme-for="vaadin-dialog-layout">
+</dom-module><dom-module id="dialog-layout-theme" theme-for="vaadin-dialog-layout">
   <template>
     <style>
       [part="header"] ::slotted(*) {
@@ -135,4 +132,6 @@
       }
     </style>
   </template>
-</dom-module>
+</dom-module>`;
+
+document.head.appendChild($_documentContainer.content);

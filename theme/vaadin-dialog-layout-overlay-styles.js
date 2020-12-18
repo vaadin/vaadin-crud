@@ -1,9 +1,6 @@
-<!--
-  DISCLAIMER: These are the styles of an internal implementation of a web
-  component, hence its API and implementation details might change without
-  any advise in future releases.
--->
-<dom-module id="dialog-layout-overlay-theme" theme-for="vaadin-dialog-overlay">
+import { html } from '@polymer/polymer/lib/utils/html-tag.js';
+
+const $_documentContainer = html`<dom-module id="dialog-layout-overlay-theme" theme-for="vaadin-dialog-overlay">
   <template>
     <style>
       :host([theme~="layout"]) [part="overlay"],
@@ -40,4 +37,12 @@
       }
     </style>
   </template>
-</dom-module>
+</dom-module>`;
+
+document.head.appendChild($_documentContainer.content);
+
+/*
+  DISCLAIMER: These are the styles of an internal implementation of a web
+  component, hence its API and implementation details might change without
+  any advise in future releases.
+*/

@@ -1,9 +1,9 @@
-<link rel="import" href="../../../vaadin-material-styles/typography.html">
-<link rel="import" href="../../../vaadin-material-styles/color.html">
-<link rel="import" href="../vaadin-dialog-layout-overlay-styles.html">
+import '@vaadin/vaadin-material-styles/typography.js';
+import '@vaadin/vaadin-material-styles/color.js';
+import '../vaadin-dialog-layout-overlay-styles.js';
+import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 
-
-<dom-module id="material-crud-grid-edit" theme-for="vaadin-crud-edit">
+const $_documentContainer = html`<dom-module id="material-crud-grid-edit" theme-for="vaadin-crud-edit">
   <template>
     <style>
       :host {
@@ -49,9 +49,7 @@
       }
     </style>
   </template>
-</dom-module>
-
-<dom-module id="lumo-crud" theme-for="vaadin-crud">
+</dom-module><dom-module id="lumo-crud" theme-for="vaadin-crud">
   <template>
     <style>
       :host {
@@ -79,9 +77,7 @@
       }
     </style>
   </template>
-</dom-module>
-
-<dom-module id="dialog-layout-theme" theme-for="vaadin-dialog-layout">
+</dom-module><dom-module id="dialog-layout-theme" theme-for="vaadin-dialog-layout">
   <template>
     <style>
       :host(:not([editor-position=""])) [part="editor"]:not([hidden]) {
@@ -104,9 +100,7 @@
       }
     </style>
   </template>
-</dom-module>
-
-<dom-module id="material-crud-vaadin-dialog-overlay" theme-for="vaadin-dialog-overlay">
+</dom-module><dom-module id="material-crud-vaadin-dialog-overlay" theme-for="vaadin-dialog-overlay">
   <template>
     <style include="material-overlay">
       @keyframes material-overlay-dummy-animation {
@@ -125,4 +119,6 @@
       }
     </style>
   </template>
-</dom-module>
+</dom-module>`;
+
+document.head.appendChild($_documentContainer.content);
