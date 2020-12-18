@@ -1,7 +1,5 @@
 import {GridColumnElement} from '@vaadin/vaadin-grid/src/vaadin-grid-column.js';
 
-import {html} from '@polymer/polymer/lib/utils/html-tag.js';
-
 /**
  * `<vaadin-crud-edit-column>` is a helper element for the `<vaadin-grid>`
  * that provides a clickable and themable edit icon.
@@ -18,7 +16,6 @@ import {html} from '@polymer/polymer/lib/utils/html-tag.js';
  * ```
  */
 declare class CrudEditColumnElement extends GridColumnElement {
-
   /**
    * The arial-label for the edit button
    */

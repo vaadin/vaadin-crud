@@ -1,14 +1,6 @@
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-
 import {ThemableMixin} from '@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js';
 
 import {ElementMixin} from '@vaadin/vaadin-element-mixin/vaadin-element-mixin.js';
-
-import {html} from '@polymer/polymer/lib/utils/html-tag.js';
-
-import {FlattenedNodesObserver} from '@polymer/polymer/lib/utils/flattened-nodes-observer.js';
-
-import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
 
 /**
  * `<vaadin-crud>` is a Web Component for [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations.
@@ -107,7 +99,7 @@ import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
 declare class CrudElement extends
   ElementMixin(
   ThemableMixin(
-  PolymerElement)) {
+  HTMLElement)) {
 
   /**
    * A reference to all fields inside the [`_form`](#/elements/vaadin-crud#property-_form) element
