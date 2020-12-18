@@ -42,9 +42,6 @@
   "devDependencies": {
     "iron-component-page": "^3.0.0",
     "webcomponentsjs": "^1.0.0",
-    "web-component-tester": "^6.1.5",
-    "vaadin-demo-helpers": "vaadin/vaadin-demo-helpers#^3.1.0",
-    "vaadin-combo-box": "^5.3.0",
-    "vaadin-notification": "^1.6.0"
+    "web-component-tester": "^6.1.5"
   }
 }
