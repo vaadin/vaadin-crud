@@ -1,39 +1,17 @@
-<!doctype html>
+import { expect } from '@esm-bundle/chai';
+import { fixtureSync } from '@open-wc/testing-helpers';
+import { nextRender } from './helpers.js';
+import '../src/vaadin-crud-form.js';
 
-<head>
-  <meta charset="UTF-8">
-  <title>vaadin-crud-form tests</title>
-  <script src="../../../wct-browser-legacy/browser.js"></script>
-  <script src="../../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
-  <script type="module" src="../../../@polymer/test-fixture/test-fixture.js"></script>
-  <script type="module" src="../src/vaadin-crud-form.js"></script>
-  <script type="module" src="./helpers.js"></script>
-</head>
+describe('crud form', () => {
+  let crudForm;
 
-<body>
-  <test-fixture id="default">
-    <template>
-      <vaadin-crud-form style="width: 500px;"></vaadin-crud-form>
-    </template>
-  </test-fixture>
-
-  <script type="module">
-import '@polymer/test-fixture/test-fixture.js';
-import { CrudFormElement } from '../src/vaadin-crud-form.js';
-import './helpers.js';
-import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
-
-describe('crud form test', () => {
-  var crudForm;
-
-  beforeEach(() => crudForm = fixture('default'));
-
-  it('should have a correct localName', () => {
-    expect(crudForm.localName).to.be.equal('vaadin-crud-form');
+  beforeEach(() => {
+    crudForm = fixtureSync('<vaadin-crud-form style="width: 500px;"></vaadin-crud-form>');
   });
 
-  it('should expose class name in Vaadin namespace', () => {
-    expect(CrudFormElement).to.be.ok;
+  it('should not expose class name globally', function () {
+    expect(window.CrudFormElement).not.to.be.ok;
   });
 
   it('should have a version number', () => {
@@ -52,21 +30,21 @@ describe('crud form test', () => {
 
     it('should set fields only once', () => {
       crudForm.item = {};
-      crudForm.item = {foo: 'bar'};
-      crudForm.item = {foo: 'bar', lorem: 'ipsum'};
+      crudForm.item = { foo: 'bar' };
+      crudForm.item = { foo: 'bar', lorem: 'ipsum' };
       expect(crudForm._fields.length).to.be.equal(1);
     });
   });
 
   describe('include and exclude', () => {
     it('should not add private fields', () => {
-      crudForm.item = {a: 1, _b: 2, c: 3};
+      crudForm.item = { a: 1, _b: 2, c: 3 };
       expect(crudForm._fields.length).to.be.equal(2);
     });
 
     it('should not add excluded fields', () => {
       crudForm.exclude = 'a, c';
-      crudForm.item = {a: 1, _b: 2, c: 3};
+      crudForm.item = { a: 1, _b: 2, c: 3 };
       expect(crudForm._fields.length).to.be.equal(1);
     });
 
@@ -77,14 +55,14 @@ describe('crud form test', () => {
 
     it('should add included fields when item is provided ignoring exclude property', () => {
       crudForm.include = '_b';
-      crudForm.item = {a: 1, _b: 2, c: 3};
+      crudForm.item = { a: 1, _b: 2, c: 3 };
       expect(crudForm._fields.length).to.be.equal(1);
     });
 
     it('should ignore `exclude` parameter when `include` is set', () => {
       crudForm.exclude = 'a, _b, c';
       crudForm.include = 'c, a';
-      crudForm.item = {a: 1, _b: 2, c: 3};
+      crudForm.item = { a: 1, _b: 2, c: 3 };
       expect(crudForm.querySelectorAll('vaadin-text-field')[0].label).to.be.equal('C');
       expect(crudForm.querySelectorAll('vaadin-text-field')[1].label).to.be.equal('A');
     });
@@ -100,9 +78,9 @@ describe('crud form test', () => {
       role: 'operator'
     };
 
-    beforeEach(done => {
+    beforeEach(async () => {
       crudForm.item = item;
-      afterNextRender(crudForm, done);
+      await nextRender(crudForm);
     });
 
     it('should automatically generate fields when item is set', () => {
@@ -123,7 +101,7 @@ describe('crud form test', () => {
       expect(crudForm.querySelectorAll('vaadin-text-field')[2].label).to.be.equal('Role');
     });
 
-    it('should set labels appropriatelly', () => {
+    it('should set labels appropriately', () => {
       expect(crudForm.querySelectorAll('vaadin-text-field')[0].label).to.be.equal('Name first');
       expect(crudForm.querySelectorAll('vaadin-text-field')[1].label).to.be.equal('Name last');
       expect(crudForm.querySelectorAll('vaadin-text-field')[2].label).to.be.equal('Role');
@@ -134,5 +112,3 @@ describe('crud form test', () => {
     });
   });
 });
-</script>
-</body>

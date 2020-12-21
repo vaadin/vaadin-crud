@@ -1,7 +1,7 @@
-import { flush as flush$0 } from '@polymer/polymer/lib/utils/flush.js';
-import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
+import { flush } from '@polymer/polymer/lib/utils/flush.js';
+import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 
-window.flushGrid = (grid) => {
+export const flushGrid = (grid) => {
   grid._observer.flush();
   if (grid._debounceScrolling) {
     grid._debounceScrolling.flush();
@@ -9,7 +9,7 @@ window.flushGrid = (grid) => {
   if (grid._debounceScrollPeriod) {
     grid._debounceScrollPeriod.flush();
   }
-  flush$0();
+  flush();
   if (grid._debouncerLoad) {
     grid._debouncerLoad.flush();
   }
@@ -19,11 +19,11 @@ window.flushGrid = (grid) => {
   while (grid._debounceIncreasePool) {
     grid._debounceIncreasePool.flush();
     grid._debounceIncreasePool = null;
-    flush$0();
+    flush();
   }
 };
 
-window.listenOnce = (element, eventName, callback) => {
+export const listenOnce = (element, eventName, callback) => {
   const listener = e => {
     element.removeEventListener(eventName, listener);
     callback(e);
@@ -31,34 +31,46 @@ window.listenOnce = (element, eventName, callback) => {
   element.addEventListener(eventName, listener);
 };
 
-window.getRows = (container) => {
+export const getRows = (container) => {
   return container.querySelectorAll('tr');
 };
 
-window.getRowCells = (row) => {
-  return Array.prototype.slice.call(dom(row).querySelectorAll('[part~="cell"]'));
+export const getRowCells = (row) => {
+  return Array.from(row.querySelectorAll('[part~="cell"]'));
 };
 
-window.getCellContent = (cell) => {
+export const getCellContent = (cell) => {
   return cell ? cell.querySelector('slot').assignedNodes()[0] : null;
 };
 
-window.getHeaderCellContent = (grid, row, col) => {
+export const getContainerCellContent = (container, row, col) => {
+  return getCellContent(getContainerCell(container, row, col));
+};
+
+export const getHeaderCellContent = (grid, row, col) => {
   const container = grid.$.header;
-  return window.getContainerCellContent(container, row, col);
+  return getContainerCellContent(container, row, col);
 };
 
-window.getBodyCellContent = (grid, row, col) => {
+export const getBodyCellContent = (grid, row, col) => {
   const container = grid.$.items;
-  return window.getContainerCellContent(container, row, col);
+  return getContainerCellContent(container, row, col);
 };
 
-window.getContainerCellContent = (container, row, col) => {
-  return window.getCellContent(window.getContainerCell(container, row, col));
-};
-
-window.getContainerCell = (container, row, col) => {
-  const rows = window.getRows(container);
-  const cells = window.getRowCells(rows[row]);
+export const getContainerCell = (container, row, col) => {
+  const rows = getRows(container);
+  const cells = getRowCells(rows[row]);
   return cells[col];
+};
+
+export const isIOS =
+  (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+export const nextRender = (target) => {
+  return new Promise((resolve) => {
+    afterNextRender(target, () => {
+      resolve();
+    });
+  });
 };

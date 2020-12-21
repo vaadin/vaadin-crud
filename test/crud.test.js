@@ -1,58 +1,14 @@
-<!doctype html>
-
-<head>
-  <meta charset="UTF-8">
-  <title>vaadin-crud tests</title>
-  <script src="../../../wct-browser-legacy/browser.js"></script>
-  <script src="../../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
-  <script type="module" src="../../../@polymer/test-fixture/test-fixture.js"></script>
-  <script type="module" src="./helpers.js"></script>
-  <script type="module" src="../src/vaadin-crud.js"></script>
-</head>
-
-<body>
-  <test-fixture id="default">
-    <template>
-      <vaadin-crud style="width: 300px;"></vaadin-crud>
-    </template>
-  </test-fixture>
-
-  <test-fixture id="declarative">
-    <template>
-      <vaadin-crud style="width: 300px;" items='[{"foo": "bar"}]' edited-item="{}">
-        <div slot="footer">Footer content</div>
-      </vaadin-crud>
-    </template>
-  </test-fixture>
-
-  <test-fixture id="grid">
-    <template>
-      <vaadin-grid>
-        <vaadin-grid-column><template>[[item]]</template></vaadin-grid-column>
-      </vaadin-grid>
-    </template>
-  </test-fixture>
-
-  <test-fixture id="form">
-    <template>
-      <vaadin-form-layout>
-        <head>Foo Editor</head>
-        <vaadin-text-field path="foo" required></vaadin-text-field>
-        <input type="number" path="bar" required>
-      </vaadin-form-layout>
-    </template>
-  </test-fixture>
-
-  <script type="module">
-import '@polymer/test-fixture/test-fixture.js';
-import './helpers.js';
+import { expect } from '@esm-bundle/chai';
+import sinon from 'sinon';
+import { aTimeout, fixtureSync } from '@open-wc/testing-helpers';
+import { flushGrid, getBodyCellContent, isIOS, listenOnce, nextRender } from './helpers.js';
 import '../src/vaadin-crud.js';
-import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
-describe('crud test', () => {
-  var crud;
+
+describe('crud', () => {
+  let crud;
 
   // Buttons in the editor dialog
-  const change = () => crud._form.dispatchEvent(new Event('change', {bubbles: true}));
+  const change = () => crud._form.dispatchEvent(new Event('change', { bubbles: true }));
   const buttons = () => crud.$.dialog.$.dialog.$.overlay.shadowRoot.querySelectorAll('vaadin-button');
   const btnSave = () => buttons()[0];
   const btnCancel = () => buttons()[1];
@@ -60,37 +16,40 @@ describe('crud test', () => {
 
   const editorHeader = () => crud.$.dialog.$.dialog.$.overlay.shadowRoot.querySelector('[slot=header]');
 
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
   // Buttons in confirm dialogs
-  const btnConfDialog = (confirDialog, id) => confirDialog.$.dialog.$.overlay.$.content.shadowRoot.querySelector(`vaadin-button#${id}`);
+  const btnConfDialog = (confirm, id) =>
+    confirm.$.dialog.$.overlay.$.content.shadowRoot.querySelector(`vaadin-button#${id}`);
 
-  const edit = item => crud._grid.dispatchEvent(new CustomEvent('edit', {detail: {item: item}}));
+  const edit = (item) => crud._grid.dispatchEvent(new CustomEvent('edit', { detail: { item } }));
 
-  beforeEach(() => crud = fixture('default'));
+  describe('basic', () => {
+    beforeEach(() => {
+      crud = fixtureSync('<vaadin-crud style="width: 300px;"></vaadin-crud>');
+    });
 
-  it('should have a correct localName', () => {
-    expect(crud.localName).to.be.equal('vaadin-crud');
-  });
+    it('should not expose class name globally', () => {
+      expect(window.CrudElement).not.to.be.ok;
+    });
 
-  it('should not expose class name globally', () => {
-    expect(window.VaadinCrud).not.to.be.ok;
-  });
-
-  it('should have a valid version number', () => {
-    expect(customElements.get('vaadin-crud').version).to.be.ok;
+    it('should have a valid version number', () => {
+      expect(customElements.get('vaadin-crud').version).to.be.ok;
+    });
   });
 
   describe('declarative', () => {
-    beforeEach(done => {
-      crud = fixture('declarative');
-      afterNextRender(crud, () => {
-        window.flushGrid(crud._grid);
-        done();
-      });
+    beforeEach(async () => {
+      crud = fixtureSync(`
+        <vaadin-crud style="width: 300px;" items='[{"foo": "bar"}]' edited-item="{}">
+          <div slot="footer">Footer content</div>
+        </vaadin-crud>
+      `);
+      await nextRender(crud);
+      flushGrid(crud._grid);
     });
 
-    afterEach(() => crud.editorOpened = false);
+    afterEach(() => {
+      crud.editorOpened = false;
+    });
 
     it('should be able to set items and item declaratively', () => {
       expect(crud._grid._columnTree.length).to.be.equal(1);
@@ -111,33 +70,38 @@ describe('crud test', () => {
       expect(crud.__isNew).to.be.true;
     });
 
-    it('should be able to internationalise via `i18n` property', done => {
+    it('should be able to internationalise via `i18n` property', async () => {
       expect(crud.$.new.textContent).to.be.equal('New item');
-      crud.i18n = Object.assign({}, crud.i18n, {newItem: 'Nueva entidad', editLabel: 'Editar entidad'});
-
-      afterNextRender(crud._grid, () => {
-        expect(crud.$.new.textContent).to.be.equal('Nueva entidad');
-        expect(crud._grid.querySelector('vaadin-crud-edit-column').ariaLabel).to.be.equal('Editar entidad');
-        expect(crud._grid.querySelector('vaadin-crud-edit').getAttribute('aria-label')).to.be.equal('Editar entidad');
-        done();
-      });
+      crud.i18n = Object.assign({}, crud.i18n, { newItem: 'Nueva entidad', editLabel: 'Editar entidad' });
+      await nextRender(crud._grid);
+      expect(crud.$.new.textContent).to.be.equal('Nueva entidad');
+      expect(crud._grid.querySelector('vaadin-crud-edit-column').ariaLabel).to.be.equal('Editar entidad');
+      expect(crud._grid.querySelector('vaadin-crud-edit').getAttribute('aria-label')).to.be.equal('Editar entidad');
     });
 
     it('should propagate theme to internal themable components', () => {
       crud.setAttribute('theme', 'foo');
-      [crud, crud._grid, crud._form, crud.$.dialog, crud.$.dialog.$.dialog, crud.$.confirmCancel, crud.$.confirmDelete]
-        .forEach(e => expect(e.getAttribute('theme')).to.be.match(/foo/));
+      [
+        crud,
+        crud._grid,
+        crud._form,
+        crud.$.dialog,
+        crud.$.dialog.$.dialog,
+        crud.$.confirmCancel,
+        crud.$.confirmDelete
+      ].forEach((e) => expect(e.getAttribute('theme')).to.be.match(/foo/));
     });
   });
 
   describe('empty items', () => {
-    beforeEach(done => {
+    beforeEach(async () => {
+      crud = fixtureSync('<vaadin-crud style="width: 300px;"></vaadin-crud>');
       crud.include = 'foo';
-      afterNextRender(crud._grid, done);
+      await nextRender(crud);
     });
 
-    it('should save a new item when list is empty but `include` is set', done => {
-      listenOnce(crud, 'items-changed', e => {
+    it('should save a new item when list is empty but `include` is set', (done) => {
+      listenOnce(crud, 'items-changed', (e) => {
         expect(crud.items[0].foo).to.be.equal('baz');
         done();
       });
@@ -150,31 +114,30 @@ describe('crud test', () => {
   });
 
   describe('empty dataProvider', () => {
-    it('should have an empty form if no item is present', done => {
-      crud.dataProvider = (params, callback) => callback([], 0);
-
-      afterNextRender(crud._grid, () => {
-        crud.$.new.click();
-        expect(crud._form._fields).to.be.empty;
-        done();
-      });
+    beforeEach(() => {
+      crud = fixtureSync('<vaadin-crud style="width: 300px;"></vaadin-crud>');
     });
 
-    it('should have a non-empty form if at least an item is present', done => {
-      crud.dataProvider = (params, callback) => callback([{foo: 'Foo1', baz: 'Baz1'}], 1);
+    it('should have an empty form if no item is present', async () => {
+      crud.dataProvider = (_, callback) => callback([], 0);
+      await nextRender(crud);
+      crud.$.new.click();
+      expect(crud._form._fields).to.be.not.ok;
+    });
 
-      afterNextRender(crud._grid, () => {
-        crud.$.new.click();
-        expect(crud._form._fields).to.not.be.empty;
-        done();
-      });
+    it('should have an empty form if no item is present', async () => {
+      crud.dataProvider = (_, callback) => callback([], 0);
+      await nextRender(crud);
+      crud.$.new.click();
+      expect(crud._form._fields).to.be.not.ok;
     });
   });
 
   describe('items', () => {
-    beforeEach(done => {
-      crud.items = [{foo: 'bar'}];
-      afterNextRender(crud._grid, done);
+    beforeEach(async () => {
+      crud = fixtureSync('<vaadin-crud style="width: 300px;"></vaadin-crud>');
+      crud.items = [{ foo: 'bar' }];
+      await nextRender(crud._grid);
     });
 
     describe('editor header', () => {
@@ -220,16 +183,16 @@ describe('crud test', () => {
         expect(crud.items.length).to.be.equal(0);
       });
 
-      it('should notify size changes', done => {
-        listenOnce(crud, 'size-changed', e => {
+      it('should notify size changes', (done) => {
+        listenOnce(crud, 'size-changed', (e) => {
           expect(crud.size).to.be.equal(2);
           done();
         });
-        crud.items = [{foo: 'bar'}, {foo: 'baz'}];
+        crud.items = [{ foo: 'bar' }, { foo: 'baz' }];
       });
 
       it('should save a new pre-filled item', () => {
-        crud.editedItem = {foo: 'baz'};
+        crud.editedItem = { foo: 'baz' };
         crud._form._fields[0].value = 'baz';
         change();
         btnSave().click();
@@ -237,7 +200,7 @@ describe('crud test', () => {
       });
 
       it('should not delete any item if item was not in items array', () => {
-        crud.editedItem = {foo: 'baz'};
+        crud.editedItem = { foo: 'baz' };
         btnDelete().click();
         btnConfDialog(crud.$.confirmDelete, 'confirm').click();
         expect(crud.items.length).to.be.equal(1);
@@ -256,10 +219,9 @@ describe('crud test', () => {
     });
 
     describe('confirmation', () => {
-
-      afterEach(done => {
+      afterEach(async () => {
         crud.$.dialog.opened = crud.$.confirmCancel.opened = crud.$.confirmDelete.opened = false;
-        setTimeout(done);
+        await aTimeout(0);
       });
 
       describe('cancel', () => {
@@ -320,7 +282,7 @@ describe('crud test', () => {
           expect(crud.$.dialog.opened).not.to.be.ok;
         });
 
-        it('should trigger "cancel" only once after user hits "Cancel"', (done) => {
+        it('should trigger "cancel" only once after user hits "Cancel"', async () => {
           crud.editOnClick = true;
 
           const cancelSpyListener = sinon.spy();
@@ -328,31 +290,30 @@ describe('crud test', () => {
 
           crud._grid.activeItem = crud.items[0];
           btnCancel().click();
-          setTimeout(() => {
-            expect(cancelSpyListener.calledOnce).to.be.ok;
-            done();
-          });
+          await aTimeout(0);
+          expect(cancelSpyListener.calledOnce).to.be.ok;
         });
 
-        it('should trigger "cancel" only once after user clicks out', (done) => {
+        it('should trigger "cancel" only once after user clicks out', async () => {
           crud.editOnClick = true;
 
           const cancelSpyListener = sinon.spy();
           crud.addEventListener('cancel', cancelSpyListener);
 
           crud._grid.activeItem = crud.items[0];
-          crud.$.new.dispatchEvent(new CustomEvent('click', {
-            bubbles: true,
-            cancelable: true,
-            composed: true
-          }));
-          setTimeout(() => {
-            expect(cancelSpyListener.calledOnce).to.be.ok;
-            done();
-          });
+          crud.$.new.dispatchEvent(
+            new CustomEvent('click', {
+              bubbles: true,
+              cancelable: true,
+              composed: true
+            })
+          );
+
+          await aTimeout(0);
+          expect(cancelSpyListener.calledOnce).to.be.ok;
         });
 
-        it('should trigger "cancel" only once after user hits esc', (done) => {
+        it('should trigger "cancel" only once after user hits esc', async () => {
           crud.editOnClick = true;
 
           const cancelSpyListener = sinon.spy();
@@ -360,13 +321,11 @@ describe('crud test', () => {
 
           crud._grid.activeItem = crud.items[0];
           crud.$.dialog.$.dialog.$.overlay.dispatchEvent(new CustomEvent('vaadin-overlay-escape-press'));
-          setTimeout(() => {
-            expect(cancelSpyListener.calledOnce).to.be.ok;
-            done();
-          });
+          await aTimeout(0);
+          expect(cancelSpyListener.calledOnce).to.be.ok;
         });
 
-        it('should not trigger "cancel" after user hits "Save"', (done) => {
+        it('should not trigger "cancel" after user hits "Save"', async () => {
           crud.editOnClick = true;
 
           const cancelSpyListener = sinon.spy();
@@ -376,12 +335,9 @@ describe('crud test', () => {
           edit(crud.items[0]);
           change();
           btnSave().click();
-          setTimeout(() => {
-            expect(cancelSpyListener.notCalled).to.be.ok;
-            done();
-          });
+          await aTimeout(0);
+          expect(cancelSpyListener.notCalled).to.be.ok;
         });
-
       });
 
       describe('delete', () => {
@@ -410,9 +366,9 @@ describe('crud test', () => {
     });
 
     describe('flags', () => {
-      afterEach(done => {
+      afterEach(async () => {
         crud.$.dialog.opened = false;
-        setTimeout(done);
+        await aTimeout(0);
       });
 
       it('should configure dirty and new flags on new', () => {
@@ -433,98 +389,90 @@ describe('crud test', () => {
         expect(crud.__isDirty).to.be.true;
       });
 
-      it('should prevent changing edited items if dirty', () => {
-        crud.editorPosition = 'bottom';
-        crud.editOnClick = true;
-        crud.items = [{foo: 'bar'}, {foo: 'baz'}];
-
-        crud._grid.activeItem = crud.items[0];
-        expect(crud.editorOpened).to.be.true;
-        change();
-        crud._grid.activeItem = crud.items[1];
-        expect(crud.$.confirmCancel.opened).to.be.true;
-        expect(crud.editedItem).to.be.equal(crud.items[0]);
-      });
-
-      it('should prompt confirm if dirty and new button is clicked', () => {
-        crud.editorPosition = 'bottom';
-        crud.editOnClick = true;
-        crud.items = [{foo: 'bar'}, {foo: 'baz'}];
-
-        crud._grid.activeItem = crud.items[0];
-        expect(crud.editorOpened).to.be.true;
-        change();
-
+      it('should hide delete button on new', async () => {
         crud.$.new.click();
-        expect(crud.$.confirmCancel.opened).to.be.true;
+        await nextRender(crud.$.dialog.$.overlay);
+        expect(btnDelete().hasAttribute('hidden')).to.be.true;
       });
 
-      it('should keep editor opened if dirty, new button is clicked and changes are discarded', () => {
-        crud.editorPosition = 'bottom';
-        crud.editOnClick = true;
-        crud.items = [{foo: 'bar'}, {foo: 'baz'}];
-
-        crud._grid.activeItem = crud.items[0];
-        expect(crud.editorOpened).to.be.true;
-        change();
-
-        crud.$.new.click();
-        expect(crud.$.confirmCancel.opened).to.be.true;
-        btnConfDialog(crud.$.confirmCancel, 'confirm').click();
-        expect(crud.editorOpened).to.be.true;
-      });
-
-      it('should change edited items if dirty when user discard changes', () => {
-        crud.editorPosition = 'bottom';
-        crud.editOnClick = true;
-        crud.items = [{foo: 'bar'}, {foo: 'baz'}];
-
-        crud._grid.activeItem = crud.items[0];
-        change();
-        crud._grid.activeItem = crud.items[1];
-        expect(crud.$.confirmCancel.opened).to.be.true;
-        btnConfDialog(crud.$.confirmCancel, 'confirm').click();
-        expect(crud.editedItem).to.be.equal(crud.items[1]);
-      });
-
-      it('should hide delete button on new', done => {
-        crud.$.new.click();
-        afterNextRender(crud.$.dialog.$.overlay, () => {
-          expect(btnDelete().hasAttribute('hidden')).to.be.true;
-          done();
-        });
-      });
-
-      it('should show delete button and disable save button on edit', done => {
+      it('should show delete button and disable save button on edit', async () => {
         edit(crud.items[0]);
-        afterNextRender(crud.$.dialog.$.overlay, () => {
-          expect(btnSave().hasAttribute('disabled')).to.be.true;
-          expect(btnDelete().hasAttribute('hidden')).not.to.be.true;
-          done();
+        await nextRender(crud.$.dialog.$.overlay);
+        expect(btnSave().hasAttribute('disabled')).to.be.true;
+        expect(btnDelete().hasAttribute('hidden')).not.to.be.true;
+      });
+
+      ['change', 'input'].forEach((type) => {
+        it('should enable save button on ' + type, async () => {
+          edit(crud.items[0]);
+          await nextRender(crud.$.dialog.$.overlay);
+          crud._form.dispatchEvent(new Event(type, { bubbles: true }));
+          expect(btnSave().hasAttribute('disabled')).not.to.be.true;
         });
       });
 
-      ['change', 'input'].forEach(type => {
-        it('should enable save button on ' + type, done => {
-          edit(crud.items[0]);
-          afterNextRender(crud.$.dialog.$.overlay, () => {
-            crud._form.dispatchEvent(new Event(type, {bubbles: true}));
-            expect(btnSave().hasAttribute('disabled')).not.to.be.true;
-            done();
-          });
+      describe('editor position', () => {
+        beforeEach(async () => {
+          crud.editorPosition = 'bottom';
+          crud.editOnClick = true;
+          await nextRender(crud);
+          flushGrid(crud._grid);
+          crud.set('items', [{ foo: 'bar' }, { foo: 'baz' }]);
+        });
+
+        it('should prevent changing edited items if dirty', () => {
+          crud._grid.activeItem = crud.items[0];
+          expect(crud.editorOpened).to.be.true;
+
+          change();
+          crud._grid.activeItem = crud.items[1];
+          expect(crud.$.confirmCancel.opened).to.be.true;
+          expect(crud.editedItem).to.be.equal(crud.items[0]);
+        });
+
+        it('should prompt confirm if dirty and new button is clicked', () => {
+          crud._grid.activeItem = crud.items[0];
+          expect(crud.editorOpened).to.be.true;
+
+          change();
+          crud.$.new.click();
+          expect(crud.$.confirmCancel.opened).to.be.true;
+        });
+
+        it('should keep editor opened if dirty, new button is clicked and changes are discarded', () => {
+          crud._grid.activeItem = crud.items[0];
+          expect(crud.editorOpened).to.be.true;
+
+          change();
+          crud.$.new.click();
+          expect(crud.$.confirmCancel.opened).to.be.true;
+
+          btnConfDialog(crud.$.confirmCancel, 'confirm').click();
+          expect(crud.editorOpened).to.be.true;
+        });
+
+        it('should change edited items if dirty when user discard changes', () => {
+          crud._grid.activeItem = crud.items[0];
+          change();
+
+          crud._grid.activeItem = crud.items[1];
+          expect(crud.$.confirmCancel.opened).to.be.true;
+
+          btnConfDialog(crud.$.confirmCancel, 'confirm').click();
+          expect(crud.editedItem).to.be.equal(crud.items[1]);
         });
       });
     });
 
     describe('events', () => {
-      afterEach(done => {
+      afterEach(async () => {
         crud.$.dialog.opened = false;
-        setTimeout(done);
+        await aTimeout(0);
       });
 
       describe('new', () => {
-        it('should fire the new event', done => {
-          listenOnce(crud, 'new', e => done());
+        it('should fire the new event', (done) => {
+          listenOnce(crud, 'new', (e) => done());
           crud.$.new.click();
         });
 
@@ -536,7 +484,7 @@ describe('crud test', () => {
         });
 
         it('on new should not set the item but open dialog if default prevented', () => {
-          listenOnce(crud, 'new', e => e.preventDefault());
+          listenOnce(crud, 'new', (e) => e.preventDefault());
           crud.$.new.click();
           expect(crud.editedItem).not.to.be.ok;
           expect(crud.$.dialog.opened).to.be.true;
@@ -544,8 +492,8 @@ describe('crud test', () => {
       });
 
       describe('edit', () => {
-        it('should fire the edit event', done => {
-          listenOnce(crud, 'edit', e => {
+        it('should fire the edit event', (done) => {
+          listenOnce(crud, 'edit', (e) => {
             expect(e.detail.item).to.be.equal(crud.items[0]);
             done();
           });
@@ -568,15 +516,15 @@ describe('crud test', () => {
         });
 
         it('on edit should not set the item nor open dialog if default prevented', () => {
-          listenOnce(crud, 'edit', e => e.preventDefault());
+          listenOnce(crud, 'edit', (e) => e.preventDefault());
           edit(crud.items[0]);
           expect(crud.editedItem).not.to.be.ok;
         });
       });
 
       describe('save', () => {
-        it('should fire the save event', done => {
-          listenOnce(crud, 'save', e => {
+        it('should fire the save event', (done) => {
+          listenOnce(crud, 'save', (e) => {
             expect(e.detail.item).to.be.deep.equal(crud.items[0]);
             done();
           });
@@ -593,14 +541,14 @@ describe('crud test', () => {
         });
 
         it('on save should keep opened dialog if default prevented', () => {
-          listenOnce(crud, 'save', e => e.preventDefault());
+          listenOnce(crud, 'save', (e) => e.preventDefault());
           edit(crud.items[0]);
           btnSave().click();
           expect(crud.$.dialog.opened).to.be.true;
         });
 
         it('on save should keep item unmodified if default prevented', () => {
-          listenOnce(crud, 'save', e => e.preventDefault());
+          listenOnce(crud, 'save', (e) => e.preventDefault());
 
           const originalItem = Object.assign({}, crud.items[0]);
           edit(crud.items[0]);
@@ -623,8 +571,8 @@ describe('crud test', () => {
       });
 
       describe('cancel', () => {
-        it('should fire the cancel event', done => {
-          listenOnce(crud, 'cancel', e => {
+        it('should fire the cancel event', (done) => {
+          listenOnce(crud, 'cancel', (e) => {
             expect(e.detail.item).to.be.equal(crud.items[0]);
             done();
           });
@@ -640,7 +588,7 @@ describe('crud test', () => {
         });
 
         it('on cancel should keep opened dialog if default prevented', () => {
-          listenOnce(crud, 'cancel', e => e.preventDefault());
+          listenOnce(crud, 'cancel', (e) => e.preventDefault());
           edit(crud.items[0]);
           btnCancel().click();
           expect(crud.$.dialog.opened).to.be.true;
@@ -648,8 +596,8 @@ describe('crud test', () => {
       });
 
       describe('delete', () => {
-        it('should fire the delete event', done => {
-          listenOnce(crud, 'delete', e => {
+        it('should fire the delete event', (done) => {
+          listenOnce(crud, 'delete', (e) => {
             expect(e.detail.item).to.be.equal(crud.items[0]);
             done();
           });
@@ -666,7 +614,7 @@ describe('crud test', () => {
         });
 
         it('on delete should keep opened dialog if default prevented', () => {
-          listenOnce(crud, 'delete', e => e.preventDefault());
+          listenOnce(crud, 'delete', (e) => e.preventDefault());
           edit(crud.items[0]);
           btnDelete().click();
           btnConfDialog(crud.$.confirmDelete, 'confirm').click();
@@ -677,6 +625,10 @@ describe('crud test', () => {
   });
 
   describe('objects', () => {
+    beforeEach(() => {
+      crud = fixtureSync('<vaadin-crud style="width: 300px;"></vaadin-crud>');
+    });
+
     it('should be possible to set nested properties to an object', () => {
       const o = {};
       crud.__set('a.b.c', 'd', o);
@@ -684,7 +636,7 @@ describe('crud test', () => {
     });
 
     it('should be possible to get nested properties to an object', () => {
-      const o = {a: {b: {c: 'd'}}};
+      const o = { a: { b: { c: 'd' } } };
       expect(crud.get('a.b.c', o)).to.be.equal('d');
     });
   });
@@ -692,97 +644,86 @@ describe('crud test', () => {
   describe('custom', () => {
     let grid, form;
 
-    beforeEach(done => {
-      grid = fixture('grid');
-      form = fixture('form');
-      afterNextRender(grid, done);
+    beforeEach(async () => {
+      crud = fixtureSync('<vaadin-crud style="width: 300px;"></vaadin-crud>');
+      grid = fixtureSync(`
+        <vaadin-grid>
+          <vaadin-grid-column><template>[[item]]</template></vaadin-grid-column>
+        </vaadin-grid>
+      `);
+      form = fixtureSync(`
+        <vaadin-form-layout>
+          <head>Foo Editor</head>
+          <vaadin-text-field path="foo" required></vaadin-text-field>
+          <input type="number" path="bar" required>
+        </vaadin-form-layout>
+      `);
+      await nextRender(grid);
     });
 
-    afterEach(done => {
+    afterEach(async () => {
       crud.$.dialog.opened = false;
-      setTimeout(done);
+      await aTimeout(0);
     });
 
-    it('should not customize the grid without a proper slot', done => {
+    it('should not customize the grid without a proper slot', async () => {
       crud.appendChild(grid);
       crud._observer.flush();
       crud.items = [1, 2];
-
-      afterNextRender(crud, () => {
-        window.flushGrid(grid);
-        expect(crud._grid).not.to.be.equal(grid);
-        done();
-      });
+      await nextRender(crud);
+      flushGrid(grid);
+      expect(crud._grid).not.to.be.equal(grid);
     });
 
-    it('should be able to provide a custom grid', done => {
+    it('should be able to provide a custom grid', async () => {
       grid.setAttribute('slot', 'grid');
       crud.appendChild(grid);
       crud._observer.flush();
       crud.items = [1, 2];
-
-      afterNextRender(crud, () => {
-        window.flushGrid(grid);
-        expect(crud._grid).to.be.equal(grid);
-        expect(getBodyCellContent(crud._grid, 0, 0).textContent).to.be.equal('1');
-        expect(getBodyCellContent(crud._grid, 1, 0).textContent).to.be.equal('2');
-        done();
-      });
+      await nextRender(crud);
+      flushGrid(grid);
+      expect(crud._grid).to.be.equal(grid);
+      expect(getBodyCellContent(crud._grid, 0, 0).textContent).to.be.equal('1');
+      expect(getBodyCellContent(crud._grid, 1, 0).textContent).to.be.equal('2');
     });
 
-    it('should not customize the form without a proper slot', done => {
+    it('should not customize the form without a proper slot', async () => {
       crud.appendChild(form);
       crud._observer.flush();
-      crud.items = [{foo: 1}];
-
-      afterNextRender(crud, () => {
-        window.flushGrid(grid);
-        edit(crud.items[0]);
-
-        afterNextRender(crud.$.dialog, () => {
-          expect(crud._form).not.to.be.equal(form);
-          done();
-        });
-      });
+      crud.items = [{ foo: 1 }];
+      await nextRender(crud);
+      edit(crud.items[0]);
+      await nextRender(crud.$.dialog);
+      expect(crud._form).not.to.be.equal(form);
     });
 
-    it('should be able to provide a custom form', done => {
+    it('should be able to provide a custom form', async () => {
       form.setAttribute('slot', 'form');
       crud.appendChild(form);
       crud._observer.flush();
-      crud.items = [{foo: 'bar'}];
-
-      afterNextRender(crud, () => {
-        window.flushGrid(grid);
-        edit(crud.items[0]);
-
-        afterNextRender(crud.$.dialog, () => {
-          expect(crud._form).to.be.equal(form);
-          expect(form.querySelector('vaadin-text-field').value).to.be.equal('bar');
-          done();
-        });
-      });
+      crud.items = [{ foo: 'bar' }];
+      await nextRender(crud);
+      edit(crud.items[0]);
+      await nextRender(crud.$.dialog);
+      expect(crud._form).to.be.equal(form);
+      expect(form.querySelector('vaadin-text-field').value).to.be.equal('bar');
     });
 
-    it('should be able to provide a custom dataProvider', done => {
-      crud.dataProvider = (params, callback) => {
+    it('should be able to provide a custom dataProvider', async () => {
+      crud.dataProvider = (_, callback) => {
         callback([1, 2], 2);
       };
 
-      afterNextRender(crud.$.dialog, () => {
-        window.flushGrid(grid);
-        expect(getBodyCellContent(crud._grid, 0, 0).textContent).to.be.equal('1');
-        expect(getBodyCellContent(crud._grid, 1, 0).textContent).to.be.equal('2');
-        done();
-      });
+      await nextRender(crud);
+      expect(getBodyCellContent(crud._grid, 0, 0).textContent).to.be.equal('1');
+      expect(getBodyCellContent(crud._grid, 1, 0).textContent).to.be.equal('2');
     });
 
     it('should not highlight the edited item', () => {
       grid.setAttribute('slot', 'grid');
       crud.appendChild(grid);
       crud._observer.flush();
-      crud.items = [{foo: 'bar'}];
-
+      crud.items = [{ foo: 'bar' }];
       edit(crud.items[0]);
       expect(crud._grid.selectedItems).to.eql([]);
     });
@@ -791,7 +732,7 @@ describe('crud test', () => {
       grid.setAttribute('slot', 'grid');
       crud.appendChild(grid);
       crud._observer.flush();
-      crud.items = [{foo: 'bar'}];
+      crud.items = [{ foo: 'bar' }];
       grid.selectedItems = [crud.items[0]];
 
       edit(crud.items[0]);
@@ -803,16 +744,25 @@ describe('crud test', () => {
   describe('validation', () => {
     let form;
 
-    beforeEach(done => {
-      form = fixture('form');
+    beforeEach(async () => {
+      crud = fixtureSync('<vaadin-crud style="width: 300px;"></vaadin-crud>');
+      form = fixtureSync(`
+        <vaadin-form-layout>
+          <head>Foo Editor</head>
+          <vaadin-text-field path="foo" required></vaadin-text-field>
+          <input type="number" path="bar" required>
+        </vaadin-form-layout>
+      `);
       form.setAttribute('slot', 'form');
       crud.appendChild(form);
       crud._observer.flush();
-      crud.items = [{foo: 1, bar: 2}];
-      afterNextRender(crud, done);
+      crud.items = [{ foo: 1, bar: 2 }];
+      await nextRender(crud);
     });
 
-    afterEach(() => crud.editorOpened = false);
+    afterEach(() => {
+      crud.editorOpened = false;
+    });
 
     it('should be able to validate fields', () => {
       edit(crud.items[0]);
@@ -830,7 +780,7 @@ describe('crud test', () => {
       edit(crud.items[0]);
       crud.__fields[1].value = '';
 
-      listenOnce(crud, 'save', e => {
+      listenOnce(crud, 'save', (e) => {
         throw Error('Error save event thrown in an invalid form');
       });
 
@@ -842,17 +792,19 @@ describe('crud test', () => {
     let crud, dialogLayout;
 
     beforeEach(() => {
-      crud = fixture('default');
+      crud = fixtureSync('<vaadin-crud style="width: 300px;"></vaadin-crud>');
       dialogLayout = crud.$.dialog;
     });
 
-    afterEach(() => crud.editorOpened = false);
+    afterEach(() => {
+      crud.editorOpened = false;
+    });
 
-    it('should have "" as default', () => {
+    it('should have empty string as default', () => {
       expect(crud.editorPosition).to.be.equal('');
     });
 
-    it('should fallback to "" if invalid value is inserted', () => {
+    it('should fallback to empty string if invalid value is inserted', () => {
       crud.editorPosition = 'invalid-value';
       expect(crud.editorPosition).to.be.equal('');
     });
@@ -876,9 +828,10 @@ describe('crud test', () => {
 
       expect(crud.$.toolbar.style.display).to.be.not.equal('none');
     });
+
     it('should always show the editor in dialog on mobile', () => {
       if (isIOS) {
-        // Only setting crud.__mobile = trueis not working on iOS test
+        // Only setting crud.__mobile = true is not working on iOS test
         crud.__mobileMediaQuery = '(max-width: 1000px), (max-height: 1000px)';
       }
       crud.__mobile = true;
@@ -908,15 +861,13 @@ describe('crud test', () => {
   describe('edit-on-click', () => {
     let crud;
 
-    beforeEach((done) => {
-      crud = fixture('default');
+    beforeEach(async () => {
+      crud = fixtureSync('<vaadin-crud style="width: 300px;"></vaadin-crud>');
       crud.editorPosition = 'bottom';
       crud.editOnClick = true;
-      crud.items = [{foo: 'bar'}, {foo: 'baz'}];
-      afterNextRender(crud, () => {
-        window.flushGrid(crud._grid);
-        done();
-      });
+      crud.items = [{ foo: 'bar' }, { foo: 'baz' }];
+      await nextRender(crud);
+      flushGrid(crud._grid);
     });
 
     function fakeClickOnRow(idx) {
@@ -968,45 +919,37 @@ describe('crud test', () => {
       expect(crud.editorOpened).to.be.false;
     });
 
-    it('should open same row again after item closed after click on "New"', (done) => {
+    it('should open same row again after item closed after click on "New"', async () => {
       crud.__mobile = false;
 
       fakeClickOnRow(0);
       expect(crud.editorOpened).to.be.true;
       crud.$.new.click();
-      setTimeout(() => {
-        expect(crud.editorOpened).to.be.true;
-        setTimeout(() => {
-          expect(crud._grid.activeItem).to.be.undefined;
-          fakeClickOnRow(0);
-          expect(crud.editorOpened).to.be.true;
-          expect(crud.editedItem).to.be.equal(crud.items[0]);
-          done();
-        });
-      });
+      await aTimeout(0);
+      expect(crud.editorOpened).to.be.true;
+      await aTimeout(0);
+      expect(crud._grid.activeItem).to.be.undefined;
+      fakeClickOnRow(0);
+      expect(crud.editorOpened).to.be.true;
+      expect(crud.editedItem).to.be.equal(crud.items[0]);
     });
 
-    it('should open same row again after item was discarded after click on "New"', (done) => {
+    it('should open same row again after item was discarded after click on "New"', async () => {
       crud.__mobile = false;
 
       fakeClickOnRow(0);
       expect(crud.editorOpened).to.be.true;
       crud.__isDirty = true;
       crud.$.new.click();
-      setTimeout(() => {
-        expect(crud.$.confirmCancel.opened).to.be.true;
-        btnConfDialog(crud.$.confirmCancel, 'confirm').click();
-        expect(crud.editorOpened).to.be.true;
-        setTimeout(() => {
-          expect(crud._grid.activeItem).to.be.undefined;
-          fakeClickOnRow(0);
-          expect(crud.editorOpened).to.be.true;
-          expect(crud.editedItem).to.be.equal(crud.items[0]);
-          done();
-        });
-      });
+      await aTimeout(0);
+      expect(crud.$.confirmCancel.opened).to.be.true;
+      btnConfDialog(crud.$.confirmCancel, 'confirm').click();
+      expect(crud.editorOpened).to.be.true;
+      await aTimeout(0);
+      expect(crud._grid.activeItem).to.be.undefined;
+      fakeClickOnRow(0);
+      expect(crud.editorOpened).to.be.true;
+      expect(crud.editedItem).to.be.equal(crud.items[0]);
     });
   });
 });
-</script>
-</body>
