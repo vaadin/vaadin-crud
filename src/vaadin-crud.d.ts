@@ -1,6 +1,6 @@
-import {ThemableMixin} from '@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js';
+import { ThemableMixin } from '@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js';
 
-import {ElementMixin} from '@vaadin/vaadin-element-mixin/vaadin-element-mixin.js';
+import { ElementMixin } from '@vaadin/vaadin-element-mixin/vaadin-element-mixin.js';
 
 /**
  * `<vaadin-crud>` is a Web Component for [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations.
@@ -96,11 +96,7 @@ import {ElementMixin} from '@vaadin/vaadin-element-mixin/vaadin-element-mixin.js
  *
  * See [ThemableMixin – how to apply styles for shadow parts](https://github.com/vaadin/vaadin-themable-mixin/wiki)
  */
-declare class CrudElement extends
-  ElementMixin(
-  ThemableMixin(
-  HTMLElement)) {
-
+declare class CrudElement extends ElementMixin(ThemableMixin(HTMLElement)) {
   /**
    * A reference to all fields inside the [`_form`](#/elements/vaadin-crud#property-_form) element
    */
@@ -109,12 +105,12 @@ declare class CrudElement extends
   /**
    * An array containing the items which will be stamped to the column template instances.
    */
-  items: CrudItem[]|null|undefined;
+  items: CrudItem[] | null | undefined;
 
   /**
    * The item being edited in the dialog.
    */
-  editedItem: CrudItem|null|undefined;
+  editedItem: CrudItem | null | undefined;
 
   /**
    * Sets how editor will be presented on desktop screen.
@@ -146,25 +142,25 @@ declare class CrudElement extends
    *   - `items` Current page of items
    *   - `size` Total number of items
    */
-  dataProvider: CrudDataProvider|null|undefined;
+  dataProvider: CrudDataProvider | null | undefined;
 
   /**
    * Disable filtering when grid is autoconfigured.
    * @attr {boolean} no-filter
    */
-  noFilter: boolean|null|undefined;
+  noFilter: boolean | null | undefined;
 
   /**
    * Disable sorting when grid is autoconfigured.
    * @attr {boolean} no-sort
    */
-  noSort: boolean|null|undefined;
+  noSort: boolean | null | undefined;
 
   /**
    * Remove grid headers when it is autoconfigured.
    * @attr {boolean} no-head
    */
-  noHead: boolean|null|undefined;
+  noHead: boolean | null | undefined;
 
   /**
    * A comma-separated list of fields to include in the generated grid and the generated editor.
@@ -175,7 +171,7 @@ declare class CrudElement extends
    *
    * Default is undefined meaning that all properties in the object should be mapped to fields.
    */
-  include: string|null|undefined;
+  include: string | null | undefined;
 
   /**
    * A comma-separated list of fields to be excluded from the generated grid and the generated editor.
@@ -184,18 +180,18 @@ declare class CrudElement extends
    *
    * Default is to exclude all private fields (those properties starting with underscore)
    */
-  exclude: string|null|undefined;
+  exclude: string | null | undefined;
 
   /**
    * Reflects the opened status of the editor.
    */
-  editorOpened: boolean|null|undefined;
+  editorOpened: boolean | null | undefined;
 
   /**
    * Number of items in the data set which is reported by the grid.
    * Typically it reflects the number of filtered items displayed in the grid.
    */
-  readonly size: number|null|undefined;
+  readonly size: number | null | undefined;
 
   /**
    * The object used to localize this component.
@@ -237,18 +233,17 @@ declare class CrudElement extends
 }
 
 declare global {
-
   interface HTMLElementTagNameMap {
-    "vaadin-crud": CrudElement;
+    'vaadin-crud': CrudElement;
   }
 }
 
-export {CrudElement};
+export { CrudElement };
 
-import {CrudItem} from '../@types/interfaces';
+import { CrudItem } from '../@types/interfaces';
 
-import {CrudEditorPosition} from '../@types/interfaces';
+import { CrudEditorPosition } from '../@types/interfaces';
 
-import {CrudDataProvider} from '../@types/interfaces';
+import { CrudDataProvider } from '../@types/interfaces';
 
-import {CrudI18n} from '../@types/interfaces';
+import { CrudI18n } from '../@types/interfaces';

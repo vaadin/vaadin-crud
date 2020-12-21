@@ -80,23 +80,23 @@ const DialogLayout = (() =>
             max-width: var(--vaadin-crud-editor-max-width);
           }
 
-          [part="editor"] {
+          [part='editor'] {
             display: flex;
             flex-direction: column;
             height: 100%;
           }
 
-          [part="editor"][hidden] {
+          [part='editor'][hidden] {
             display: none;
           }
 
-          :host([editor-position='bottom']) [part="editor"]:not([hidden]) {
+          :host([editor-position='bottom']) [part='editor']:not([hidden]) {
             height: 100%;
             display: flex;
             flex-direction: column;
           }
 
-          [part="scroller"] {
+          [part='scroller'] {
             display: flex;
             flex-direction: column;
             overflow: auto;
@@ -104,7 +104,7 @@ const DialogLayout = (() =>
             flex: auto;
           }
 
-          [part="footer"] {
+          [part='footer'] {
             display: flex;
             flex: none;
             flex-direction: row-reverse;
@@ -124,9 +124,15 @@ const DialogLayout = (() =>
           </div>
         </div>
 
-        <vaadin-dialog id="dialog" opened="[[_computeEditorOpened(opened, mobile, '')]]" aria-label="[[__ariaLabel]]" no-close-on-outside-click="[[noCloseOnOutsideClick]]" no-close-on-esc="[[noCloseOnEsc]]" theme$="[[theme]] layout">
-          <template>
-          </template>
+        <vaadin-dialog
+          id="dialog"
+          opened="[[_computeEditorOpened(opened, mobile, '')]]"
+          aria-label="[[__ariaLabel]]"
+          no-close-on-outside-click="[[noCloseOnOutsideClick]]"
+          no-close-on-esc="[[noCloseOnEsc]]"
+          theme$="[[theme]] layout"
+        >
+          <template></template>
         </vaadin-dialog>
       `;
     }
@@ -179,7 +185,7 @@ const DialogLayout = (() =>
     }
 
     _openedChanged(opened) {
-      if (this.opened) {
+      if (opened) {
         this._ensureChildren();
       }
 
@@ -198,22 +204,30 @@ const DialogLayout = (() =>
 
       if (this.editorPosition === '' || this.mobile) {
         // Move children from editor to dialog
-        Array.from(this.$.editor.childNodes).forEach(c => this.$.dialog.$.overlay.$.content.shadowRoot.appendChild(c));
-        Array.from(this.childNodes).forEach(c => this.$.dialog.$.overlay.$.content.appendChild(c));
+        Array.from(this.$.editor.childNodes).forEach((c) =>
+          this.$.dialog.$.overlay.$.content.shadowRoot.appendChild(c)
+        );
+        Array.from(this.childNodes).forEach((c) => this.$.dialog.$.overlay.$.content.appendChild(c));
 
         // Wait to set label until slotted element have been moved.
-        setTimeout(() =>
+        setTimeout(() => {
           this.__ariaLabel = Array.from(this.$.dialog.$.overlay.$.content.querySelectorAll('[slot=header]'))
-            .reduce((prev, ele) => prev + ' ' + ele.textContent, '').trim());
+            .reduce((prev, ele) => prev + ' ' + ele.textContent, '')
+            .trim();
+        });
       } else {
         // Move children from dialog to editor
-        Array.from(this.$.dialog.$.overlay.$.content.shadowRoot.childNodes).forEach(c => this.$.editor.appendChild(c));
-        Array.from(this.$.dialog.$.overlay.$.content.childNodes).forEach(c => this.appendChild(c));
+        Array.from(this.$.dialog.$.overlay.$.content.shadowRoot.childNodes).forEach((c) =>
+          this.$.editor.appendChild(c)
+        );
+        Array.from(this.$.dialog.$.overlay.$.content.childNodes).forEach((c) => this.appendChild(c));
 
         // Wait to set label until slotted element have been moved.
-        setTimeout(() =>
+        setTimeout(() => {
           this.__ariaLabel = Array.from(this.querySelectorAll('[slot=header]'))
-            .reduce((prev, ele) => prev + ' ' + ele.textContent, '').trim());
+            .reduce((prev, ele) => prev + ' ' + ele.textContent, '')
+            .trim();
+        });
       }
     }
 
@@ -223,7 +237,6 @@ const DialogLayout = (() =>
       }
       return editorPositions.indexOf(this.editorPosition) !== -1 && opened;
     }
-  }
-)();
+  })();
 
 customElements.define(DialogLayout.is, DialogLayout);

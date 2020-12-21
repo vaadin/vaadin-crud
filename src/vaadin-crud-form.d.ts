@@ -1,6 +1,6 @@
-import {FormLayoutElement} from '@vaadin/vaadin-form-layout/src/vaadin-form-layout.js';
+import { FormLayoutElement } from '@vaadin/vaadin-form-layout/src/vaadin-form-layout.js';
 
-import {IncludedMixin} from './vaadin-crud-include-mixin.js';
+import { IncludedMixin } from './vaadin-crud-include-mixin.js';
 
 /**
  * `<vaadin-crud-form>` is a <vaadin-form-layout> which automatically can configures all its items based
@@ -9,14 +9,11 @@ import {IncludedMixin} from './vaadin-crud-include-mixin.js';
  * You cannot manually configure fields but you can still style the layout as it's described in
  * `<vaadin-form-layout>` [Documentation](https://vaadin.com/components/vaadin-form-layout/html-api/elements/Vaadin.FormLayoutElement)
  */
-declare class CrudFormElement extends
-  IncludedMixin(
-  FormLayoutElement) {
-
+declare class CrudFormElement extends IncludedMixin(FormLayoutElement) {
   /**
    * The item being edited.
    */
-  item: CrudItem|null|undefined;
+  item: CrudItem | null | undefined;
 
   /**
    * Autogenerate form fields based on the JSON structure of the object provided.
@@ -27,12 +24,11 @@ declare class CrudFormElement extends
 }
 
 declare global {
-
   interface HTMLElementTagNameMap {
-    "vaadin-crud-form": CrudFormElement;
+    'vaadin-crud-form': CrudFormElement;
   }
 }
 
-export {CrudFormElement};
+export { CrudFormElement };
 
-import {CrudItem} from '../@types/interfaces';
+import { CrudItem } from '../@types/interfaces';

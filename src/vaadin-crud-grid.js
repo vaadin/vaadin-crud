@@ -52,10 +52,7 @@ class CrudGridElement extends IncludedMixin(GridElement) {
   }
 
   static get observers() {
-    return [
-      '__onItemsChange(items)',
-      '__onHideEditColumnChange(hideEditColumn)'
-    ];
+    return ['__onItemsChange(items)', '__onHideEditColumnChange(hideEditColumn)'];
   }
 
   /** @private */
@@ -66,7 +63,7 @@ class CrudGridElement extends IncludedMixin(GridElement) {
   }
 
   /** @private */
-  __onHideEditColumnChange(hideEditColumn) {
+  __onHideEditColumnChange() {
     if (this.firstChild) {
       this.__toggleEditColumn();
     }
@@ -149,7 +146,7 @@ class CrudGridElement extends IncludedMixin(GridElement) {
           textField.setAttribute('focus-target', true);
           textField.style.width = '100%';
           this.noSort && (textField.placeholder = label);
-          textField.addEventListener('value-changed', function(event) {
+          textField.addEventListener('value-changed', function (event) {
             filter.value = event.detail.value;
           });
 
@@ -170,7 +167,7 @@ class CrudGridElement extends IncludedMixin(GridElement) {
   /** @private */
   __createColumns(parent, object, path) {
     if (typeof object === 'object') {
-      Object.keys(object).forEach(prop => {
+      Object.keys(object).forEach((prop) => {
         if (!this.include && this.exclude && this.exclude.test(prop)) {
           return;
         }
@@ -188,22 +185,29 @@ class CrudGridElement extends IncludedMixin(GridElement) {
   }
 
   /** @private */
-  __createGroup(parent, path, object) {
+  __createGroup(parent, path) {
     const grp = document.createElement('vaadin-grid-column-group');
-    grp.headerRenderer = root => root.textContent = this.__capitalize(path.replace(/^.*\./, ''));
+    grp.headerRenderer = (root) => (root.textContent = this.__capitalize(path.replace(/^.*\./, '')));
     parent.appendChild(grp);
     return grp;
   }
 
   /** @private */
   __capitalize(path) {
-    return path.toLowerCase().replace(/([^\w]+)/g, ' ').trim().replace(/^./, c => c.toUpperCase());
+    return path
+      .toLowerCase()
+      .replace(/([^\w]+)/g, ' ')
+      .trim()
+      .replace(/^./, (c) => c.toUpperCase());
   }
 
   /** @private */
   __set(path, val, obj) {
     if (obj && path) {
-      path.split('.').slice(0, -1).reduce((o, p) => (o[p] = o[p] || {}), obj);
+      path
+        .split('.')
+        .slice(0, -1)
+        .reduce((o, p) => (o[p] = o[p] || {}), obj);
       this.set(path, val, obj);
     }
   }

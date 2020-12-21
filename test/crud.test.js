@@ -101,7 +101,7 @@ describe('crud', () => {
     });
 
     it('should save a new item when list is empty but `include` is set', (done) => {
-      listenOnce(crud, 'items-changed', (e) => {
+      listenOnce(crud, 'items-changed', () => {
         expect(crud.items[0].foo).to.be.equal('baz');
         done();
       });
@@ -184,7 +184,7 @@ describe('crud', () => {
       });
 
       it('should notify size changes', (done) => {
-        listenOnce(crud, 'size-changed', (e) => {
+        listenOnce(crud, 'size-changed', () => {
           expect(crud.size).to.be.equal(2);
           done();
         });
@@ -472,7 +472,7 @@ describe('crud', () => {
 
       describe('new', () => {
         it('should fire the new event', (done) => {
-          listenOnce(crud, 'new', (e) => done());
+          listenOnce(crud, 'new', () => done());
           crud.$.new.click();
         });
 
@@ -780,7 +780,7 @@ describe('crud', () => {
       edit(crud.items[0]);
       crud.__fields[1].value = '';
 
-      listenOnce(crud, 'save', (e) => {
+      listenOnce(crud, 'save', () => {
         throw Error('Error save event thrown in an invalid form');
       });
 

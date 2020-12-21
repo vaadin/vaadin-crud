@@ -24,7 +24,7 @@ export const flushGrid = (grid) => {
 };
 
 export const listenOnce = (element, eventName, callback) => {
-  const listener = e => {
+  const listener = (e) => {
     element.removeEventListener(eventName, listener);
     callback(e);
   };

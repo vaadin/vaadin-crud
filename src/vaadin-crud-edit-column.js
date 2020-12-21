@@ -27,12 +27,11 @@ import './vaadin-crud-edit.js';
 class CrudEditColumnElement extends GridColumnElement {
   static get template() {
     return html`
-    <template class="header" id="defaultHeaderTemplate" aria-label="Edit">
-    </template>
-    <template id="defaultBodyTemplate">
-      <div id="edit">Edit</div>
-    </template>
-`;
+      <template class="header" id="defaultHeaderTemplate" aria-label="Edit"> </template>
+      <template id="defaultBodyTemplate">
+        <div id="edit">Edit</div>
+      </template>
+    `;
   }
 
   static get is() {
@@ -67,7 +66,7 @@ class CrudEditColumnElement extends GridColumnElement {
   /** @private */
   ready() {
     super.ready();
-    this.renderer = (root, column, model) => {
+    this.renderer = (root) => {
       if (!root.firstElementChild) {
         const elm = document.createElement('vaadin-crud-edit');
         this.hasAttribute('theme') && elm.setAttribute('theme', this.getAttribute('theme'));

@@ -20,12 +20,12 @@ import { ThemableMixin } from '@vaadin/vaadin-themable-mixin/vaadin-themable-mix
 class CrudEditElement extends ThemableMixin(PolymerElement) {
   static get template() {
     return html`
-    <style>
-      :host {
-        display: block;
-      }
-    </style>
-`;
+      <style>
+        :host {
+          display: block;
+        }
+      </style>
+    `;
   }
 
   static get is() {
@@ -44,7 +44,8 @@ class CrudEditElement extends ThemableMixin(PolymerElement) {
   __onClick(e) {
     const tr = e.target.parentElement.assignedSlot.parentElement.parentElement;
     tr.dispatchEvent(
-      new CustomEvent('edit', {detail: {item: tr._item, index: tr.index}, bubbles: true, composed: true}));
+      new CustomEvent('edit', { detail: { item: tr._item, index: tr.index }, bubbles: true, composed: true })
+    );
   }
 
   /**

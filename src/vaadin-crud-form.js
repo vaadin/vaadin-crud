@@ -58,7 +58,7 @@ class CrudFormElement extends IncludedMixin(FormLayoutElement) {
   }
 
   /** @private */
-  __createField(parent, path, type) {
+  __createField(parent, path) {
     const field = document.createElement('vaadin-text-field');
     field.label = this.__capitalize(path);
     field.path = path;
@@ -70,7 +70,7 @@ class CrudFormElement extends IncludedMixin(FormLayoutElement) {
 
   /** @private */
   __createFields(parent, object, path) {
-    Object.keys(object).forEach(prop => {
+    Object.keys(object).forEach((prop) => {
       if (!this.include && this.exclude && this.exclude.test(prop)) {
         return;
       }
@@ -88,13 +88,20 @@ class CrudFormElement extends IncludedMixin(FormLayoutElement) {
 
   /** @private */
   __capitalize(path) {
-    return path.toLowerCase().replace(/([^\w]+)/g, ' ').trim().replace(/^./, c => c.toUpperCase());
+    return path
+      .toLowerCase()
+      .replace(/([^\w]+)/g, ' ')
+      .trim()
+      .replace(/^./, (c) => c.toUpperCase());
   }
 
   /** @private */
   __set(path, val, obj) {
     if (obj && path) {
-      path.split('.').slice(0, -1).reduce((o, p) => (o[p] = o[p] || {}), obj);
+      path
+        .split('.')
+        .slice(0, -1)
+        .reduce((o, p) => (o[p] = o[p] || {}), obj);
       this.set(path, val, obj);
     }
   }

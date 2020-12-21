@@ -1,15 +1,14 @@
-export {IncludedMixin};
+export { IncludedMixin };
 
 declare function IncludedMixin<T extends new (...args: any[]) => {}>(base: T): T & IncludedMixinConstructor;
 
 interface IncludedMixinConstructor {
-  new(...args: any[]): IncludedMixin;
+  new (...args: any[]): IncludedMixin;
 }
 
-export {IncludedMixinConstructor};
+export { IncludedMixinConstructor };
 
 interface IncludedMixin {
-
   /**
    * A list of item fields that should not be mapped to form fields.
    *
@@ -17,12 +16,12 @@ interface IncludedMixin {
    *
    * Default is to exclude any private property.
    */
-  exclude: string|RegExp|null;
+  exclude: string | RegExp | null;
 
   /**
    * A list of item properties that should be mapped to form fields.
    *
    * When it is defined [`exclude`](#/elements/vaadin-crud-form#property-exclude) is ignored.
    */
-  include: string|string[]|undefined;
+  include: string | string[] | undefined;
 }

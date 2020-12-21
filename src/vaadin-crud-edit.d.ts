@@ -1,4 +1,4 @@
-import {ThemableMixin} from '@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js';
+import { ThemableMixin } from '@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js';
 
 /**
  * `<vaadin-crud-edit>` is a helper element for `<vaadin-grid-column>` that provides
@@ -11,8 +11,7 @@ import {ThemableMixin} from '@vaadin/vaadin-themable-mixin/vaadin-themable-mixin
 declare class CrudEditElement extends ThemableMixin(HTMLElement) {}
 
 declare global {
-
   interface HTMLElementTagNameMap {
-    "vaadin-crud-edit": CrudEditElement;
+    'vaadin-crud-edit': CrudEditElement;
   }
 }
