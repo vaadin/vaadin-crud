@@ -5,87 +5,10 @@ This program is available under Commercial Vaadin Developer License 4.0 (CVDLv4)
 
 See <a href="https://vaadin.com/license/cvdl-4.0">the website</a> for the complete license.
 */
-import { PolymerElement } from '@polymer/polymer/polymer-element.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { ThemableMixin } from '@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js';
 import { ElementMixin } from '@vaadin/vaadin-element-mixin/vaadin-element-mixin.js';
 import '@vaadin/vaadin-dialog/src/vaadin-dialog.js';
-
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<dom-module id="vaadin-dialog-layout">
-  <template>
-    <style>
-      :host {
-        z-index: 1;
-      }
-
-      :host(:not([editor-position=''])[opened]:not([mobile])) {
-        flex: 1 0 100%;
-      }
-
-      :host([editor-position='bottom'][opened]:not([mobile])) {
-        max-height: var(--vaadin-crud-editor-max-height);
-      }
-
-      :host([editor-position='aside'][opened]:not([mobile])) {
-        min-width: 300px;
-        max-width: var(--vaadin-crud-editor-max-width);
-      }
-
-      [part="editor"] {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-      }
-
-      [part="editor"][hidden] {
-        display: none;
-      }
-
-      :host([editor-position='bottom']) [part="editor"]:not([hidden]) {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-      }
-
-      [part="scroller"] {
-        display: flex;
-        flex-direction: column;
-        overflow: auto;
-        -webkit-overflow-scrolling: touch;
-        flex: auto;
-      }
-
-      [part="footer"] {
-        display: flex;
-        flex: none;
-        flex-direction: row-reverse;
-      }
-    </style>
-
-    <div id="editor" part="editor" hidden\$="[[!_computeEditorOpened(opened, mobile, 'bottom','aside')]]">
-      <div part="scroller" id="scroller" role="group" aria-labelledby="header">
-        <div part="header" id="header">
-          <slot name="header"></slot>
-        </div>
-        <slot></slot>
-      </div>
-
-      <div part="footer" role="toolbar">
-        <slot name="footer"></slot>
-      </div>
-    </div>
-
-    <vaadin-dialog id="dialog" opened="[[_computeEditorOpened(opened, mobile, '')]]" aria-label="[[__ariaLabel]]" no-close-on-outside-click="[[noCloseOnOutsideClick]]" no-close-on-esc="[[noCloseOnEsc]]" theme\$="[[theme]] layout">
-      <template>
-      </template>
-    </vaadin-dialog>
-  </template>
-
-
-</dom-module>`;
-
-document.head.appendChild($_documentContainer.content);
 
 // Although the class is annotated as private, we need to indirect define it
 // in order to skip its API in the component page
@@ -139,6 +62,77 @@ const DialogLayout = (() =>
       return 'vaadin-dialog-layout';
     }
 
+    static get template() {
+      return html`
+        <style>
+          :host {
+            z-index: 1;
+          }
+
+          :host(:not([editor-position=''])[opened]:not([mobile])) {
+            flex: 1 0 100%;
+          }
+
+          :host([editor-position='bottom'][opened]:not([mobile])) {
+            max-height: var(--vaadin-crud-editor-max-height);
+          }
+
+          :host([editor-position='aside'][opened]:not([mobile])) {
+            min-width: 300px;
+            max-width: var(--vaadin-crud-editor-max-width);
+          }
+
+          [part="editor"] {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+          }
+
+          [part="editor"][hidden] {
+            display: none;
+          }
+
+          :host([editor-position='bottom']) [part="editor"]:not([hidden]) {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+          }
+
+          [part="scroller"] {
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            flex: auto;
+          }
+
+          [part="footer"] {
+            display: flex;
+            flex: none;
+            flex-direction: row-reverse;
+          }
+        </style>
+
+        <div id="editor" part="editor" hidden$="[[!_computeEditorOpened(opened, mobile, 'bottom','aside')]]">
+          <div part="scroller" id="scroller" role="group" aria-labelledby="header">
+            <div part="header" id="header">
+              <slot name="header"></slot>
+            </div>
+            <slot></slot>
+          </div>
+
+          <div part="footer" role="toolbar">
+            <slot name="footer"></slot>
+          </div>
+        </div>
+
+        <vaadin-dialog id="dialog" opened="[[_computeEditorOpened(opened, mobile, '')]]" aria-label="[[__ariaLabel]]" no-close-on-outside-click="[[noCloseOnOutsideClick]]" no-close-on-esc="[[noCloseOnEsc]]" theme$="[[theme]] layout">
+          <template>
+          </template>
+        </vaadin-dialog>
+      `;
+    }
+
     static get properties() {
       return {
         /**
@@ -151,21 +145,27 @@ const DialogLayout = (() =>
           reflectToAttribute: true,
           observer: '_openedChanged'
         },
+
         editorPosition: {
           type: String,
           reflectToAttribute: true
         },
+
         /** Theme to use */
         theme: String,
+
         /** Disable closing when user clicks outside */
         noCloseOnOutsideClick: Boolean,
+
         /** Disable closing when user presses escape */
         noCloseOnEsc: Boolean,
+
         mobile: {
           type: Boolean,
           observer: '__mobileChanged',
           reflectToAttribute: true
         },
+
         __ariaLabel: String
       };
     }
