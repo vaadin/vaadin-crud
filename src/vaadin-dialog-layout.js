@@ -1,10 +1,8 @@
 /**
-@license
-Copyright (c) 2018 - 2020 Vaadin Ltd
-This program is available under Commercial Vaadin Developer License 4.0 (CVDLv4).
-
-See <a href="https://vaadin.com/license/cvdl-4.0">the website</a> for the complete license.
-*/
+ * @license
+ * Copyright (c) 2017 - 2020 Vaadin Ltd
+ * This program is available under Commercial Vaadin Developer License 4.0, available at https://vaadin.com/license/cvdl-4.0.
+ */
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { ThemableMixin } from '@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js';
 import { ElementMixin } from '@vaadin/vaadin-element-mixin/vaadin-element-mixin.js';
