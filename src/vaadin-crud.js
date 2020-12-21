@@ -111,6 +111,12 @@ import './vaadin-crud-form.js';
  *
  * See [ThemableMixin – how to apply styles for shadow parts](https://github.com/vaadin/vaadin-themable-mixin/wiki)
  *
+ * @fires {CustomEvent} new - Fired when user wants to create a new item.
+ * @fires {CustomEvent} edit - Fired when user wants to edit an existing item.
+ * @fires {CustomEvent} delete - Fired when user wants to delete item.
+ * @fires {CustomEvent} save - Fired when user wants to save a new or an existing item.
+ * @fires {CustomEvent} cancel - Fired when user discards edition.
+ *
  * @extends HTMLElement
  * @mixes ElementMixin
  * @mixes ThemableMixin
