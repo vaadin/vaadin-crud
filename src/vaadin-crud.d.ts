@@ -2,7 +2,7 @@ import { ThemableMixin } from '@vaadin/vaadin-themable-mixin/vaadin-themable-mix
 
 import { ElementMixin } from '@vaadin/vaadin-element-mixin/vaadin-element-mixin.js';
 
-import { CrudDataProvider, CrudEditorPosition, CrudI18n, CrudItem } from './interfaces';
+import { CrudDataProvider, CrudEditorPosition, CrudEventMap, CrudI18n } from './interfaces';
 
 /**
  * `<vaadin-crud>` is a Web Component for [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations.
@@ -98,7 +98,7 @@ import { CrudDataProvider, CrudEditorPosition, CrudI18n, CrudItem } from './inte
  *
  * See [ThemableMixin – how to apply styles for shadow parts](https://github.com/vaadin/vaadin-themable-mixin/wiki)
  */
-declare class CrudElement extends ElementMixin(ThemableMixin(HTMLElement)) {
+declare class CrudElement<Item> extends ElementMixin(ThemableMixin(HTMLElement)) {
   /**
    * A reference to all fields inside the [`_form`](#/elements/vaadin-crud#property-_form) element
    */
@@ -107,12 +107,12 @@ declare class CrudElement extends ElementMixin(ThemableMixin(HTMLElement)) {
   /**
    * An array containing the items which will be stamped to the column template instances.
    */
-  items: CrudItem[] | null | undefined;
+  items: Array<Item> | null | undefined;
 
   /**
    * The item being edited in the dialog.
    */
-  editedItem: CrudItem | null | undefined;
+  editedItem: Item | null | undefined;
 
   /**
    * Sets how editor will be presented on desktop screen.
@@ -144,7 +144,7 @@ declare class CrudElement extends ElementMixin(ThemableMixin(HTMLElement)) {
    *   - `items` Current page of items
    *   - `size` Total number of items
    */
-  dataProvider: CrudDataProvider | null | undefined;
+  dataProvider: CrudDataProvider<Item> | null | undefined;
 
   /**
    * Disable filtering when grid is autoconfigured.
@@ -232,11 +232,23 @@ declare class CrudElement extends ElementMixin(ThemableMixin(HTMLElement)) {
    * ```
    */
   i18n: CrudI18n;
+
+  addEventListener<K extends keyof CrudEventMap<Item>>(
+    type: K,
+    listener: (this: CrudElement<Item>, ev: CrudEventMap<Item>[K]) => void,
+    options?: boolean | AddEventListenerOptions
+  ): void;
+
+  removeEventListener<K extends keyof CrudEventMap<Item>>(
+    type: K,
+    listener: (this: CrudElement<Item>, ev: CrudEventMap<Item>[K]) => void,
+    options?: boolean | EventListenerOptions
+  ): void;
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'vaadin-crud': CrudElement;
+    'vaadin-crud': CrudElement<any>;
   }
 }
 

@@ -1,7 +1,7 @@
 import { GridFilter, GridSorter } from '@vaadin/vaadin-grid'
 
-export type CrudDataProviderCallback = (
-  items: Array<CrudItem>,
+export type CrudDataProviderCallback<T> = (
+  items: Array<T>,
   size?: number
 ) => void;
 
@@ -12,14 +12,12 @@ export type CrudDataProviderParams = {
   sortOrders: Array<GridSorter>;
 };
 
-export type CrudDataProvider = (
+export type CrudDataProvider<T> = (
   params: CrudDataProviderParams,
-  callback: CrudDataProviderCallback
+  callback: CrudDataProviderCallback<T>
 ) => void;
 
 export type CrudEditorPosition = '' | 'bottom' | 'aside';
-
-export type CrudItem = unknown;
 
 export interface CrudI18n {
   newItem: string;
@@ -47,3 +45,42 @@ export interface CrudI18n {
     }
   }
 }
+
+/**
+ * Fired when user wants to create a new item.
+ */
+export type CrudNew = CustomEvent<{ item: null }>;
+
+/**
+ * Fired when user wants to edit an existing item.
+ */
+export type CrudEdit<T> = CustomEvent<{ item: T }>;
+
+/**
+ * Fired when user wants to delete item.
+ */
+export type CrudDelete<T> = CustomEvent<{ item: T }>;
+
+/**
+ * Fired when user discards edition.
+ */
+export type CrudCancel<T> = CustomEvent<{ item: T }>;
+
+/**
+ * Fired when user wants to save a new or an existing item.
+ */
+export type CrudSave<T> = CustomEvent<{ item: T; new: boolean }>;
+
+export type CrudElementEventMap<T> = {
+  'new': CrudNew;
+
+  'cancel': CrudCancel<T>;
+
+  'delete': CrudDelete<T>;
+
+  'edit': CrudEdit<T>;
+
+  'save': CrudSave<T>;
+}
+
+export type CrudEventMap<T> = HTMLElementEventMap & CrudElementEventMap<T>;
