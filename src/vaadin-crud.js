@@ -271,7 +271,7 @@ class CrudElement extends ElementMixin(ThemableMixin(PolymerElement)) {
 
       /**
        * An array containing the items which will be stamped to the column template instances.
-       * @type {Array<!CrudItem> | undefined}
+       * @type {Array<unknown> | undefined}
        */
       items: {
         type: Array,
@@ -281,7 +281,7 @@ class CrudElement extends ElementMixin(ThemableMixin(PolymerElement)) {
 
       /**
        * The item being edited in the dialog.
-       * @type {CrudItem | undefined}
+       * @type {unknown}
        */
       editedItem: {
         type: Object,
