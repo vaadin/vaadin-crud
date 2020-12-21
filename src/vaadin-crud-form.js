@@ -37,7 +37,7 @@ class CrudFormElement extends IncludedMixin(FormLayoutElement) {
   }
 
   /**
-   * Autogenerate form fields based on the JSON structure of the object provided.
+   * Auto-generate form fields based on the JSON structure of the object provided.
    *
    * If not called, the method will be executed the first time an item is assigned.
    * @param {!CrudItem} object

@@ -105,7 +105,7 @@ class CrudGridElement extends IncludedMixin(GridElement) {
   }
 
   /**
-   * Autogenerate grid columns based on the JSON structure of the object provided.
+   * Auto-generate grid columns based on the JSON structure of the object provided.
    *
    * Method will be executed when items or dataProvider is assigned.
    * @private
