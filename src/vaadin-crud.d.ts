@@ -2,6 +2,8 @@ import { ThemableMixin } from '@vaadin/vaadin-themable-mixin/vaadin-themable-mix
 
 import { ElementMixin } from '@vaadin/vaadin-element-mixin/vaadin-element-mixin.js';
 
+import { CrudDataProvider, CrudEditorPosition, CrudI18n, CrudItem } from './interfaces';
+
 /**
  * `<vaadin-crud>` is a Web Component for [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations.
  *
@@ -230,8 +232,6 @@ declare class CrudElement extends ElementMixin(ThemableMixin(HTMLElement)) {
    * ```
    */
   i18n: CrudI18n;
-  static _finalizeClass(): void;
-  ready(): void;
 }
 
 declare global {
@@ -241,11 +241,3 @@ declare global {
 }
 
 export { CrudElement };
-
-import { CrudItem } from '../@types/interfaces';
-
-import { CrudEditorPosition } from '../@types/interfaces';
-
-import { CrudDataProvider } from '../@types/interfaces';
-
-import { CrudI18n } from '../@types/interfaces';

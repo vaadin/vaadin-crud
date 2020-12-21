@@ -1,4 +1,4 @@
-import { GridFilter, GridSorter } from '@vaadin/vaadin-grid/@types/interfaces'
+import { GridFilter, GridSorter } from '@vaadin/vaadin-grid'
 
 export type CrudDataProviderCallback = (
   items: Array<CrudItem>,

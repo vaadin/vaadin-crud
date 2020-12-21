@@ -2,6 +2,8 @@ import { FormLayoutElement } from '@vaadin/vaadin-form-layout/src/vaadin-form-la
 
 import { IncludedMixin } from './vaadin-crud-include-mixin.js';
 
+import { CrudItem } from './interfaces';
+
 /**
  * `<vaadin-crud-form>` is a <vaadin-form-layout> which automatically can configures all its items based
  * on the JSON structure of the first item set.
@@ -31,4 +33,3 @@ declare global {
 
 export { CrudFormElement };
 
-import { CrudItem } from '../@types/interfaces';

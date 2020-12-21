@@ -1,12 +1,8 @@
-export { IncludedMixin };
-
 declare function IncludedMixin<T extends new (...args: any[]) => {}>(base: T): T & IncludedMixinConstructor;
 
 interface IncludedMixinConstructor {
   new (...args: any[]): IncludedMixin;
 }
-
-export { IncludedMixinConstructor };
 
 interface IncludedMixin {
   /**
@@ -25,3 +21,5 @@ interface IncludedMixin {
    */
   include: string | string[] | undefined;
 }
+
+export { IncludedMixin, IncludedMixinConstructor };
