@@ -3,10 +3,9 @@
 Copyright (c) 2017 - 2020 Vaadin Ltd
 This program is available under Commercial Vaadin Developer License 4.0, available at https://vaadin.com/license/cvdl-4.0.
 */
-import { PolymerElement } from '@polymer/polymer/polymer-element.js';
-
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { ThemableMixin } from '@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js';
-import { html } from '@polymer/polymer/lib/utils/html-tag.js';
+
 /**
  * `<vaadin-crud-edit>` is a helper element for `<vaadin-grid-column>` that provides
  * an easily themable button that fires an `edit` event with the row item as detail

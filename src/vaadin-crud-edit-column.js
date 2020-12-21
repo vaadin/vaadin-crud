@@ -4,9 +4,9 @@ Copyright (c) 2017 - 2020 Vaadin Ltd
 This program is available under Commercial Vaadin Developer License 4.0, available at https://vaadin.com/license/cvdl-4.0.
 */
 import { GridColumnElement } from '@vaadin/vaadin-grid/src/vaadin-grid-column.js';
-
-import './vaadin-crud-edit.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
+import './vaadin-crud-edit.js';
+
 /**
  * `<vaadin-crud-edit-column>` is a helper element for the `<vaadin-grid>`
  * that provides a clickable and themable edit icon.

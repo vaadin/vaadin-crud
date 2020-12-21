@@ -3,8 +3,6 @@
 Copyright (c) 2017 - 2020 Vaadin Ltd
 This program is available under Commercial Vaadin Developer License 4.0, available at https://vaadin.com/license/cvdl-4.0.
 */
-import '@polymer/polymer/polymer-element.js';
-
 import { GridElement } from '@vaadin/vaadin-grid/src/vaadin-grid.js';
 import '@vaadin/vaadin-grid/src/vaadin-grid-column.js';
 import '@vaadin/vaadin-grid/src/vaadin-grid-column-group.js';

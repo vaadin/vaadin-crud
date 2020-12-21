@@ -6,10 +6,10 @@ This program is available under Commercial Vaadin Developer License 4.0 (CVDLv4)
 See <a href="https://vaadin.com/license/cvdl-4.0">the website</a> for the complete license.
 */
 import { PolymerElement } from '@polymer/polymer/polymer-element.js';
-
 import { ThemableMixin } from '@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js';
 import { ElementMixin } from '@vaadin/vaadin-element-mixin/vaadin-element-mixin.js';
 import '@vaadin/vaadin-dialog/src/vaadin-dialog.js';
+
 const $_documentContainer = document.createElement('template');
 
 $_documentContainer.innerHTML = `<dom-module id="vaadin-dialog-layout">
@@ -82,10 +82,11 @@ $_documentContainer.innerHTML = `<dom-module id="vaadin-dialog-layout">
     </vaadin-dialog>
   </template>
 
-  
+
 </dom-module>`;
 
 document.head.appendChild($_documentContainer.content);
+
 // Although the class is annotated as private, we need to indirect define it
 // in order to skip its API in the component page
 const DialogLayout = (() =>
