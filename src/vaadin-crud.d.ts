@@ -200,32 +200,34 @@ declare class CrudElement extends ElementMixin(ThemableMixin(HTMLElement)) {
    *
    * The object has the following JSON structure and default values:
    *
-   *         {
-   *           newItem: 'New item',
-   *           editItem: 'Edit item',
-   *           saveItem: 'Save',
-   *           cancel: 'Cancel',
-   *           deleteItem: 'Delete...',
-   *           editLabel: 'Edit',
-   *           confirm: {
-   *             delete: {
-   *               title: 'Confirm delete',
-   *               content: 'Are you sure you want to delete the selected item? This action cannot be undone.',
-   *               button: {
-   *                 confirm: 'Delete',
-   *                 dismiss: 'Cancel'
-   *               }
-   *             },
-   *             cancel: {
-   *               title: 'Unsaved changes',
-   *               content: 'There are unsaved modifications to the item.',
-   *               button: {
-   *                 confirm: 'Discard',
-   *                 dismiss: 'Continue editing'
-   *               }
-   *             }
-   *           }
-   *         }
+   * ```
+   * {
+   *   newItem: 'New item',
+   *   editItem: 'Edit item',
+   *   saveItem: 'Save',
+   *   cancel: 'Cancel',
+   *   deleteItem: 'Delete...',
+   *   editLabel: 'Edit',
+   *   confirm: {
+   *     delete: {
+   *       title: 'Confirm delete',
+   *       content: 'Are you sure you want to delete the selected item? This action cannot be undone.',
+   *       button: {
+   *         confirm: 'Delete',
+   *         dismiss: 'Cancel'
+   *       }
+   *     },
+   *     cancel: {
+   *       title: 'Unsaved changes',
+   *       content: 'There are unsaved modifications to the item.',
+   *       button: {
+   *         confirm: 'Discard',
+   *         dismiss: 'Continue editing'
+   *       }
+   *     }
+   *   }
+   * }
+   * ```
    */
   i18n: CrudI18n;
   static _finalizeClass(): void;

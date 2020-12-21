@@ -397,34 +397,36 @@ class CrudElement extends ElementMixin(ThemableMixin(PolymerElement)) {
        * _i18n_ object or just the property you want to modify.
        *
        * The object has the following JSON structure and default values:
-
-        {
-          newItem: 'New item',
-          editItem: 'Edit item',
-          saveItem: 'Save',
-          cancel: 'Cancel',
-          deleteItem: 'Delete...',
-          editLabel: 'Edit',
-          confirm: {
-            delete: {
-              title: 'Confirm delete',
-              content: 'Are you sure you want to delete the selected item? This action cannot be undone.',
-              button: {
-                confirm: 'Delete',
-                dismiss: 'Cancel'
-              }
-            },
-            cancel: {
-              title: 'Unsaved changes',
-              content: 'There are unsaved modifications to the item.',
-              button: {
-                confirm: 'Discard',
-                dismiss: 'Continue editing'
-              }
-            }
-          }
-        }
-
+       *
+       * ```
+       * {
+       *   newItem: 'New item',
+       *   editItem: 'Edit item',
+       *   saveItem: 'Save',
+       *   cancel: 'Cancel',
+       *   deleteItem: 'Delete...',
+       *   editLabel: 'Edit',
+       *   confirm: {
+       *     delete: {
+       *       title: 'Confirm delete',
+       *       content: 'Are you sure you want to delete the selected item? This action cannot be undone.',
+       *       button: {
+       *         confirm: 'Delete',
+       *         dismiss: 'Cancel'
+       *       }
+       *     },
+       *     cancel: {
+       *       title: 'Unsaved changes',
+       *       content: 'There are unsaved modifications to the item.',
+       *       button: {
+       *         confirm: 'Discard',
+       *         dismiss: 'Continue editing'
+       *       }
+       *     }
+       *   }
+       * }
+       * ```
+       *
        * @type {!CrudI18n}
        * @default {English/US}
        */
