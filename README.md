@@ -10,14 +10,17 @@
 
 # &lt;vaadin-crud&gt;
 
-[Live Demo ↗](https://vaadin.com/components/vaadin-crud/html-examples)
-|
-[API documentation ↗](https://vaadin.com/components/vaadin-crud/html-api)
+> ⚠️ Starting from Vaadin 20, the source code and issues for this component are migrated to the [`vaadin/web-components`](https://github.com/vaadin/web-components/tree/master/packages/vaadin-crud) monorepository.
+> This repository contains the source code and releases of `<vaadin-crud>` for the Vaadin versions 10 to 19.
 
 
 [&lt;vaadin-crud&gt;](https://vaadin.com/components/vaadin-crud) is a Web Component for
 [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations.
 It is part of the [Vaadin components](https://vaadin.com/components).
+
+[Live Demo ↗](https://vaadin.com/components/vaadin-crud/html-examples)
+|
+[API documentation ↗](https://vaadin.com/components/vaadin-crud/html-api)
 
 ```html
 <vaadin-crud items='[{"name": "Juan", "surname": "Garcia"}]'>
