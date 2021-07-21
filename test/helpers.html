@@ -62,4 +62,11 @@
     return cells[col];
   };
 
+  window.nextRender = (element) => {
+    return new Promise(resolve => {
+      Polymer.RenderStatus.afterNextRender(element, () => {
+        resolve();
+      });
+    });
+  };
 </script>
