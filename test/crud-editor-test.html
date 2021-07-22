@@ -6,7 +6,7 @@
   <script src="../../web-component-tester/browser.js"></script>
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <link rel="import" href="../../test-fixture/test-fixture.html">
-  <link rel="import" href="../vaadin-crud.html">
+  <link rel="import" href="../src/vaadin-crud.html">
   <link rel="import" href="helpers.html">
 </head>
 
@@ -31,10 +31,7 @@
     describe('vaadin-crud editor', () => {
       ['default', 'custom'].forEach((type) => {
         describe(`${type} form`, () => {
-          let crud, dialogLayout, dialog, form;
-
-          const buttons = () => form.parentElement.querySelectorAll('vaadin-button');
-          const btnCancel = () => buttons()[1];
+          let crud, dialogLayout, dialog, form, buttons;
 
           beforeEach(async() => {
             crud = fixture(type);
@@ -47,6 +44,7 @@
             dialogLayout = crud.$.dialog;
             form = dialogLayout.form;
             dialog = dialogLayout.$.dialog;
+            buttons = dialogLayout.querySelectorAll('vaadin-button');
           });
 
           it(`should move ${type} form to dialog content with default editorPosition`, () => {
@@ -68,7 +66,7 @@
 
           it(`should move ${type} form when editorPosition changes from default to bottom`, async() => {
             crud._grid.activeItem = crud.items[0];
-            btnCancel().click();
+            buttons[1].click();
 
             crud.editorPosition = 'bottom';
             await nextRender(crud);
@@ -82,7 +80,7 @@
             await nextRender(crud);
 
             crud._grid.activeItem = crud.items[0];
-            btnCancel().click();
+            buttons[1].click();
 
             crud.editorPosition = '';
             await nextRender(crud);
