@@ -44,18 +44,35 @@
         describe(`${type} form`, () => {
           let crud, dialogLayout, form, buttons;
 
-          beforeEach(async() => {
+          beforeEach(() => {
             crud = fixture(type);
             crud.editOnClick = true;
             crud.__mobile = false;
-            window.ShadyDOM && window.ShadyDOM.flush();
-            await nextRender(crud);
-            flushGrid(crud._grid);
-
             crud.set('items', [{foo: 'bar'}, {foo: 'baz'}]);
+            window.flushGrid(crud._grid);
             dialogLayout = crud.$.dialog;
             form = dialogLayout.form;
             buttons = dialogLayout.querySelectorAll('vaadin-button');
+          });
+
+          it(`should move ${type} form when editorPosition changes from default to bottom`, () => {
+            crud._grid.activeItem = crud.items[0];
+            buttons[1].click();
+
+            crud.editorPosition = 'bottom';
+            crud._grid.activeItem = crud.items[1];
+            expectHost(form, 'vaadin-crud');
+          });
+
+          it(`should move ${type} form when editorPosition changes from bottom to default`, () => {
+            crud.editorPosition = 'bottom';
+            crud._grid.activeItem = crud.items[0];
+
+            buttons[1].click();
+
+            crud.editorPosition = '';
+            crud._grid.activeItem = crud.items[1];
+            expectHost(form, 'vaadin-dialog-overlay');
           });
 
           it(`should move ${type} form to dialog content with default editorPosition`, () => {
@@ -73,31 +90,6 @@
             crud.editorPosition = 'aside';
             crud._grid.activeItem = crud.items[0];
             expectHost(form, 'vaadin-crud');
-          });
-
-          it(`should move ${type} form when editorPosition changes from default to bottom`, async() => {
-            crud._grid.activeItem = crud.items[0];
-            buttons[1].click();
-
-            crud.editorPosition = 'bottom';
-            await nextRender(crud);
-
-            crud._grid.activeItem = crud.items[1];
-            expectHost(form, 'vaadin-crud');
-          });
-
-          it(`should move ${type} form when editorPosition changes from bottom to default`, async() => {
-            crud.editorPosition = 'bottom';
-            await nextRender(crud);
-
-            crud._grid.activeItem = crud.items[0];
-            buttons[1].click();
-
-            crud.editorPosition = '';
-            await nextRender(crud);
-
-            crud._grid.activeItem = crud.items[1];
-            expectHost(form, 'vaadin-dialog-overlay');
           });
         });
       });
