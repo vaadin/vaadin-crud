@@ -12,7 +12,6 @@
     "listenOnce": false,
     "getHeaderCellContent": false,
     "getBodyCellContent": false,
-    "nextRender": false,
     "flushGrid": false
   }
 }
