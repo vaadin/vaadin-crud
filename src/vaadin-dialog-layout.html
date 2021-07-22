@@ -216,6 +216,8 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             // Teleport footer nodes
             this.__footer.forEach(node => target.appendChild(node));
 
+            window.ShadyDOM && window.ShadyDOM.flush();
+
             // Wait to set label until slotted element has been moved.
             setTimeout(() => {
               this.__ariaLabel = this.__header.textContent.trim();
