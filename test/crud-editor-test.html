@@ -29,39 +29,50 @@
 
   <script>
     describe('vaadin-crud editor', () => {
+      function expectHost(node, tagName) {
+        const host = node.getRootNode().host;
+        if (host) {
+          expect(host.localName).to.equal(tagName);
+        } else {
+          // IE11 moves the node but the above check fails,
+          // so we check for the style-scope class instead.
+          expect(node.classList.contains(tagName)).to.be.true;
+        }
+      }
+
       ['default', 'custom'].forEach((type) => {
         describe(`${type} form`, () => {
-          let crud, dialogLayout, dialog, form, buttons;
+          let crud, dialogLayout, form, buttons;
 
           beforeEach(async() => {
             crud = fixture(type);
             crud.editOnClick = true;
             crud.__mobile = false;
+            window.ShadyDOM && window.ShadyDOM.flush();
             await nextRender(crud);
             flushGrid(crud._grid);
 
             crud.set('items', [{foo: 'bar'}, {foo: 'baz'}]);
             dialogLayout = crud.$.dialog;
             form = dialogLayout.form;
-            dialog = dialogLayout.$.dialog;
             buttons = dialogLayout.querySelectorAll('vaadin-button');
           });
 
           it(`should move ${type} form to dialog content with default editorPosition`, () => {
             crud._grid.activeItem = crud.items[0];
-            expect(form.getRootNode().host).to.equal(dialog.$.overlay);
+            expectHost(form, 'vaadin-dialog-overlay');
           });
 
           it(`should move ${type} form to layout when editorPosition set to bottom`, () => {
             crud.editorPosition = 'bottom';
             crud._grid.activeItem = crud.items[0];
-            expect(form.getRootNode().host).to.equal(crud);
+            expectHost(form, 'vaadin-crud');
           });
 
           it(`should move ${type} form to layout when editorPosition set to aside`, () => {
             crud.editorPosition = 'aside';
             crud._grid.activeItem = crud.items[0];
-            expect(form.getRootNode().host).to.equal(crud);
+            expectHost(form, 'vaadin-crud');
           });
 
           it(`should move ${type} form when editorPosition changes from default to bottom`, async() => {
@@ -72,7 +83,7 @@
             await nextRender(crud);
 
             crud._grid.activeItem = crud.items[1];
-            expect(form.getRootNode().host).to.equal(crud);
+            expectHost(form, 'vaadin-crud');
           });
 
           it(`should move ${type} form when editorPosition changes from bottom to default`, async() => {
@@ -86,7 +97,7 @@
             await nextRender(crud);
 
             crud._grid.activeItem = crud.items[1];
-            expect(form.getRootNode().host).to.equal(dialog.$.overlay);
+            expectHost(form, 'vaadin-dialog-overlay');
           });
         });
       });
