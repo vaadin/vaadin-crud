@@ -1,0 +1,98 @@
+<!doctype html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>vaadin-crud-form tests</title>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../../test-fixture/test-fixture.html">
+  <link rel="import" href="../src/vaadin-crud.html">
+  <link rel="import" href="helpers.html">
+</head>
+
+<body>
+  <test-fixture id="default">
+    <template>
+      <vaadin-crud style="width: 300px;"></vaadin-crud>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="custom">
+    <template>
+      <vaadin-crud style="width: 300px;">
+        <vaadin-form-layout slot="form">
+          <vaadin-text-field path="foo" required></vaadin-text-field>
+        </vaadin-form-layout>
+      </vaadin-crud>
+    </template>
+  </test-fixture>
+
+  <script>
+    describe('vaadin-crud editor', () => {
+      function expectHost(node, tagName) {
+        const host = node.getRootNode().host;
+        if (host) {
+          expect(host.localName).to.equal(tagName);
+        } else {
+          // IE11 moves the node but the above check fails,
+          // so we check for the style-scope class instead.
+          expect(node.classList.contains(tagName)).to.be.true;
+        }
+      }
+
+      ['default', 'custom'].forEach((type) => {
+        describe(`${type} form`, () => {
+          let crud, dialogLayout, form, buttons;
+
+          beforeEach(() => {
+            crud = fixture(type);
+            crud.editOnClick = true;
+            crud.__mobile = false;
+            crud.set('items', [{foo: 'bar'}, {foo: 'baz'}]);
+            window.flushGrid(crud._grid);
+            dialogLayout = crud.$.dialog;
+            form = dialogLayout.form;
+            buttons = dialogLayout.querySelectorAll('vaadin-button');
+          });
+
+          it(`should move ${type} form when editorPosition changes from default to bottom`, () => {
+            crud._grid.activeItem = crud.items[0];
+            buttons[1].click();
+
+            crud.editorPosition = 'bottom';
+            crud._grid.activeItem = crud.items[1];
+            expectHost(form, 'vaadin-crud');
+          });
+
+          it(`should move ${type} form when editorPosition changes from bottom to default`, () => {
+            crud.editorPosition = 'bottom';
+            crud._grid.activeItem = crud.items[0];
+
+            buttons[1].click();
+
+            crud.editorPosition = '';
+            crud._grid.activeItem = crud.items[1];
+            expectHost(form, 'vaadin-dialog-overlay');
+          });
+
+          it(`should move ${type} form to dialog content with default editorPosition`, () => {
+            crud._grid.activeItem = crud.items[0];
+            expectHost(form, 'vaadin-dialog-overlay');
+          });
+
+          it(`should move ${type} form to layout when editorPosition set to bottom`, () => {
+            crud.editorPosition = 'bottom';
+            crud._grid.activeItem = crud.items[0];
+            expectHost(form, 'vaadin-crud');
+          });
+
+          it(`should move ${type} form to layout when editorPosition set to aside`, () => {
+            crud.editorPosition = 'aside';
+            crud._grid.activeItem = crud.items[0];
+            expectHost(form, 'vaadin-crud');
+          });
+        });
+      });
+    });
+  </script>
+</body>

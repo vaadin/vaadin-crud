@@ -164,6 +164,8 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
               noCloseOnOutsideClick: Boolean,
               /** Disable closing when user presses escape */
               noCloseOnEsc: Boolean,
+              /** Reference to the edit form */
+              form: Object,
               mobile: {
                 type: Boolean,
                 observer: '__mobileChanged',
@@ -177,6 +179,8 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             super.ready();
             this._dialogOpenedChangedListener = this._dialogOpenedChangedListener.bind(this);
             this.$.dialog.addEventListener('opened-changed', this._dialogOpenedChangedListener);
+            this.__header = this.querySelector('[slot="header"]');
+            this.__footer = Array.from(this.querySelectorAll('[slot="footer"]'));
           }
 
           _dialogOpenedChangedListener() {
@@ -196,29 +200,47 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             this._ensureChildren();
           }
 
+          __moveChildNodes(target) {
+            // Teleport header node
+            target.appendChild(this.__header);
+
+            // For custom form, remove slot attribute
+            // so that it is properly moved to dialog.
+            if (this.form.hasAttribute('slot')) {
+              this.form.removeAttribute('slot');
+            }
+
+            // Teleport edit form
+            target.appendChild(this.form);
+
+            // Teleport footer nodes
+            this.__footer.forEach(node => target.appendChild(node));
+
+            window.ShadyDOM && window.ShadyDOM.flush();
+
+            // Wait to set label until slotted element has been moved.
+            setTimeout(() => {
+              this.__ariaLabel = this.__header.textContent.trim();
+            });
+          }
+
           _ensureChildren() {
-            if (!this.$.dialog.$.overlay.$.content.shadowRoot) {
+            if (!this.form) {
               return;
             }
 
-            if (this.editorPosition === '' || this.mobile) {
-              // Move children from editor to dialog
-              Array.from(this.$.editor.childNodes).forEach(c => this.$.dialog.$.overlay.$.content.shadowRoot.appendChild(c));
-              Array.from(this.childNodes).forEach(c => this.$.dialog.$.overlay.$.content.appendChild(c));
+            const content = this.$.dialog.$.overlay.$.content;
 
-              // Wait to set label until slotted element have been moved.
-              setTimeout(() =>
-                this.__ariaLabel = Array.from(this.$.dialog.$.overlay.$.content.querySelectorAll('[slot=header]'))
-                  .reduce((prev, ele) => prev + ' ' + ele.textContent, '').trim());
+            if ((this.editorPosition === '' || this.mobile) && content.shadowRoot) {
+              // Move children from editor to dialog
+              Array.from(this.$.editor.childNodes).forEach(node => content.shadowRoot.appendChild(node));
+              this.__moveChildNodes(content);
             } else {
               // Move children from dialog to editor
-              Array.from(this.$.dialog.$.overlay.$.content.shadowRoot.childNodes).forEach(c => this.$.editor.appendChild(c));
-              Array.from(this.$.dialog.$.overlay.$.content.childNodes).forEach(c => this.appendChild(c));
-
-              // Wait to set label until slotted element have been moved.
-              setTimeout(() =>
-                this.__ariaLabel = Array.from(this.querySelectorAll('[slot=header]'))
-                  .reduce((prev, ele) => prev + ' ' + ele.textContent, '').trim());
+              if (content.shadowRoot) {
+                Array.from(content.shadowRoot.childNodes).forEach(node => this.$.editor.appendChild(node));
+              }
+              this.__moveChildNodes(this);
             }
           }
 
