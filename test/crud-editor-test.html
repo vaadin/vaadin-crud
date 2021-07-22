@@ -49,19 +49,19 @@
 
           it(`should move ${type} form to dialog content with default editorPosition`, () => {
             crud._grid.activeItem = crud.items[0];
-            expect(form.parentElement).to.equal(dialog.$.overlay.$.content);
+            expect(form.getRootNode().host).to.equal(dialog.$.overlay);
           });
 
           it(`should move ${type} form to layout when editorPosition set to bottom`, () => {
             crud.editorPosition = 'bottom';
             crud._grid.activeItem = crud.items[0];
-            expect(form.parentElement).to.equal(dialogLayout);
+            expect(form.getRootNode().host).to.equal(crud);
           });
 
           it(`should move ${type} form to layout when editorPosition set to aside`, () => {
             crud.editorPosition = 'aside';
             crud._grid.activeItem = crud.items[0];
-            expect(form.parentElement).to.equal(dialogLayout);
+            expect(form.getRootNode().host).to.equal(crud);
           });
 
           it(`should move ${type} form when editorPosition changes from default to bottom`, async() => {
@@ -72,7 +72,7 @@
             await nextRender(crud);
 
             crud._grid.activeItem = crud.items[1];
-            expect(form.parentElement).to.equal(dialogLayout);
+            expect(form.getRootNode().host).to.equal(crud);
           });
 
           it(`should move ${type} form when editorPosition changes from bottom to default`, async() => {
@@ -86,7 +86,7 @@
             await nextRender(crud);
 
             crud._grid.activeItem = crud.items[1];
-            expect(form.parentElement).to.equal(dialog.$.overlay.$.content);
+            expect(form.getRootNode().host).to.equal(dialog.$.overlay);
           });
         });
       });
