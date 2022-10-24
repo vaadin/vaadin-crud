@@ -77,6 +77,10 @@
         expect(customElements.get('vaadin-crud').version).to.be.ok;
       });
 
+      it('should have a valid cvdl getter', () => {
+        expect(customElements.get('vaadin-crud').cvdlName).to.be.equal('vaadin-crud');
+      });
+
       describe('declarative', () => {
         beforeEach(done => {
           crud = fixture('declarative');
