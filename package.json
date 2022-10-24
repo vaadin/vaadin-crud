@@ -13,6 +13,7 @@
   ],
   "author": "Vaadin Ltd",
   "license": "https://raw.githubusercontent.com/vaadin/vaadin-crud/master/LICENSE",
+  "cvdlName": "vaadin-crud",
   "bugs": {
     "url": "https://github.com/vaadin/vaadin-crud/issues"
   },
