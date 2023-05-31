@@ -34,7 +34,7 @@
     "vaadin-dialog": "^2.5.0",
     "vaadin-grid": "^5.7.0",
     "vaadin-form-layout": "^2.3.0",
-    "vaadin-text-field": "^2.7.0",
+    "vaadin-text-field": "^2.10.0",
     "vaadin-button": "^2.4.0",
     "vaadin-confirm-dialog": "^1.3.0",
     "vaadin-license-checker": "vaadin/license-checker#^2.1.0"
